@@ -1,12 +1,23 @@
-import './App.css'
+import React from 'react';
+import Header from './components/Header';
 
-function App() {
 
-  return (
-    <>
-      Hello
-    </>
-  )
+class App extends React.Component {
+  state = {
+    search: '',
+  };
+
+  handleSearch = (value: string) => {
+    this.setState({ search: value });
+  };
+
+  render() {
+    return (
+        <div>
+          <Header />
+        </div>
+    );
+  }
 }
 
-export default App
+export default App;
