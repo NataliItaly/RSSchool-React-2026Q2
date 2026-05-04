@@ -2,7 +2,7 @@ import React from 'react';
 import Card from './Card';
 import type { CardItem } from '../types';
 
-class MapList extends React.Component<{ items: CardItem[] }> {
+class CardList extends React.Component<{ items: CardItem[] }> {
   render() {
     return (
       <div>
@@ -14,4 +14,4 @@ class MapList extends React.Component<{ items: CardItem[] }> {
   }
 }
 
-export default MapList;
+export default CardList;

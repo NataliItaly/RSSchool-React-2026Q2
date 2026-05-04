@@ -1,7 +1,7 @@
 import React from 'react';
 import { fetchCharacters, type Character } from '../services/api';
 import Search from './Search';
-import MapList from './MapList';
+import CardList from './CardList';
 
 type State = {
   items: Character[];
@@ -113,7 +113,7 @@ class Main extends React.Component<Record<string, never>, State> {
         {error && <p style={{ color: 'red' }}>{error}</p>}
 
         {/* LIST */}
-        <MapList items={items} />
+        <CardList items={items} />
 
         {/* PAGINATION */}
         <div style={{ marginTop: 20 }}>
