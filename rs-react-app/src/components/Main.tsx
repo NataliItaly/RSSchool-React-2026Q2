@@ -2,6 +2,7 @@ import React from 'react';
 import { fetchCharacters, type Character } from '../services/api';
 import Search from './Search';
 import CardList from './CardList';
+import BuggyButton from './BuggyButton';
 
 type State = {
   items: Character[];
@@ -109,6 +110,9 @@ class Main extends React.Component<Record<string, never>, State> {
         {/* LOADING */}
         {loading && <p>Loading...</p>}
 
+        {/* BUGGY BUTTON */}
+        <BuggyButton />
+
         {/* ERROR */}
         {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -117,13 +121,21 @@ class Main extends React.Component<Record<string, never>, State> {
 
         {/* PAGINATION */}
         <div style={{ marginTop: 20 }}>
-          <button style={{cursor: 'pointer'}} onClick={this.prevPage} disabled={page === 1}>
+          <button
+            style={{ cursor: 'pointer' }}
+            onClick={this.prevPage}
+            disabled={page === 1}
+          >
             Prev
           </button>
 
           <span style={{ margin: '0 10px' }}>Page {page}</span>
 
-          <button style={{cursor: 'pointer'}} onClick={this.nextPage} disabled={!hasNext}>
+          <button
+            style={{ cursor: 'pointer' }}
+            onClick={this.nextPage}
+            disabled={!hasNext}
+          >
             Next
           </button>
         </div>

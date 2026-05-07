@@ -7,12 +7,17 @@ class Card extends React.Component<{ item: CardItem }> {
     console.log('item', item);
 
     return (
-      <div style={{ border: '1px solid #ccc', margin: 5, padding: 10, width: '200px', borderRadius: '10px' }}>
-        <h4>
-          Name{' '}
-          <span style={{ color: '#000' }}>
-            {item.name}
-          </span>
+      <div
+        style={{
+          border: '1px solid #ccc',
+          margin: 5,
+          padding: 10,
+          width: '200px',
+          borderRadius: '10px',
+        }}
+      >
+        <h4 style={{height: '55px'}}>
+          Name <span style={{ color: '#000' }}>{item.name}</span>
         </h4>
         <div>
           <img
@@ -27,7 +32,7 @@ class Card extends React.Component<{ item: CardItem }> {
 
         <p>
           Gender{' '}
-          <b style={{ color: item.gender === 'Male' ? 'blue' : 'pink' }}>
+          <b style={{ color: item.gender === 'Male' ? 'blue' : item.gender === 'Female' ? '#f81e44' : 'orangered' }}>
             {item.gender}
           </b>
         </p>
