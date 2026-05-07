@@ -4,7 +4,6 @@ import type { CardItem } from '../types/index';
 class Card extends React.Component<{ item: CardItem }> {
   render() {
     const { item } = this.props;
-    console.log('item', item);
 
     return (
       <div

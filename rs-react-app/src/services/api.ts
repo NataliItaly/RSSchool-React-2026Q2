@@ -23,7 +23,6 @@ export async function fetchCharacters(search: string, page: number) {
   }
 
   const data = await res.json();
-  console.log(data)
 
   return {
     results: data.results as Character[],
