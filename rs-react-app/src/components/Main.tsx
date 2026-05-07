@@ -117,13 +117,13 @@ class Main extends React.Component<Record<string, never>, State> {
 
         {/* PAGINATION */}
         <div style={{ marginTop: 20 }}>
-          <button onClick={this.prevPage} disabled={page === 1}>
+          <button style={{cursor: 'pointer'}} onClick={this.prevPage} disabled={page === 1}>
             Prev
           </button>
 
           <span style={{ margin: '0 10px' }}>Page {page}</span>
 
-          <button onClick={this.nextPage} disabled={!hasNext}>
+          <button style={{cursor: 'pointer'}} onClick={this.nextPage} disabled={!hasNext}>
             Next
           </button>
         </div>
