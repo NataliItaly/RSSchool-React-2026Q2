@@ -13,10 +13,6 @@ class App extends React.Component {
   };
 
   render() {
-    alert(
-      `Уважаемый проверяющий, если вам не трудно, проверьте пожалуйста мою работу в четверг. Спасибо за понимание!Dear college, if you don't mind, please check my work on Thursday. Thank you for understanding!`
-    );
-
     return (
         <div>
           <Header />
