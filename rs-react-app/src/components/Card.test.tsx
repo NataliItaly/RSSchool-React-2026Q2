@@ -44,7 +44,7 @@ describe('Card component', () => {
     const gender = screen.getByText('Male');
 
     expect(gender).toHaveStyle({
-      color: 'blue',
+      color: 'rgb(0, 0, 255)',
     });
   });
 
@@ -59,7 +59,7 @@ describe('Card component', () => {
     const gender = screen.getByText('Female');
 
     expect(gender).toHaveStyle({
-      color: '#f81e44',
+      color: 'rgb(248, 30, 68)',
     });
   });
 });

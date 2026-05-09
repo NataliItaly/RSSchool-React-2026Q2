@@ -5,6 +5,8 @@ export type Character = {
   name: string;
   status: string;
   image: string;
+  species: string;
+  gender: string;
 };
 
 export async function fetchCharacters(search: string, page: number) {

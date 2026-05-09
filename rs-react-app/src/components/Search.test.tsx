@@ -1,17 +1,18 @@
+import { describe, test, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Search from './Search';
 
 describe('Search component', () => {
   test('renders Search button', () => {
     const mockOnSearch = vi.fn();
-    render(<Search onSearch={mockOnSearch}/>);
+    render(<Search onSearch={mockOnSearch} />);
 
     const button = screen.getByRole('button');
     expect(button).toHaveTextContent('Search');
   });
   test('renders Search input', () => {
     const mockOnSearch = vi.fn();
-    render(<Search onSearch={mockOnSearch}/>);
+    render(<Search onSearch={mockOnSearch} />);
 
     expect(screen.getByRole('textbox')).toBeInTheDocument();
   });

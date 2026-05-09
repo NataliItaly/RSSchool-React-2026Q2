@@ -12,17 +12,18 @@ describe('ErrorBoundary component', () => {
 
     expect(screen.getByText('Test text')).toBeInTheDocument();
   });
-  test('catche error from children component', () => {
+  test('catches error from children component', () => {
     render(
       <ErrorBoundary>
-        <div>Test text</div>
+        <BuggyButton />
       </ErrorBoundary>
     );
 
     fireEvent.click(screen.getByRole('button'));
 
     expect(screen.getByText(/Something is wrong/i)).toBeInTheDocument();
-    expect(screen.getByText(/Error/i)).toBeInTheDocument();
+    expect(screen.getByText(/^Error$/i)).toBeInTheDocument();
+    expect(screen.getByText(/Test error/i)).toBeInTheDocument();
   });
   test('resets error state when clicking Try again', () => {
     render(

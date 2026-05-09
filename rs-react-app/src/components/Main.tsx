@@ -1,8 +1,10 @@
 import React from 'react';
-import { fetchCharacters, type Character } from '../services/api';
 import Search from './Search';
 import CardList from './CardList';
 import BuggyButton from './BuggyButton';
+import { fetchCharacters } from '../services/api';
+import type { Character } from '../services/api';
+
 
 type State = {
   items: Character[];

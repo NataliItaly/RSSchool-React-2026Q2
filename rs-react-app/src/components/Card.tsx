@@ -15,23 +15,34 @@ class Card extends React.Component<{ item: CardItem }> {
           borderRadius: '10px',
         }}
       >
-        <h4 style={{height: '55px'}}>
+        <h4 style={{ height: '55px' }}>
           Name <span style={{ color: '#000' }}>{item.name}</span>
         </h4>
         <div>
-          <img
+          {item.image ? (
+            <img
             src={item.image}
             alt={item.name}
             style={{
               width: 150,
               borderRadius: 10,
             }}
-          />
+            />
+          ) : null}
         </div>
 
         <p>
           Gender{' '}
-          <b style={{ color: item.gender === 'Male' ? 'blue' : item.gender === 'Female' ? '#f81e44' : 'orangered' }}>
+          <b
+            style={{
+              color:
+                item.gender === 'Male'
+                  ? 'rgb(0, 0, 255)'
+                  : item.gender === 'Female'
+                    ? 'rgb(248, 30, 68)'
+                    : 'orangered',
+            }}
+          >
             {item.gender}
           </b>
         </p>
