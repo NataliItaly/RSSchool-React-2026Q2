@@ -1,14 +1,16 @@
 import { render, screen } from '@testing-library/react';
-import CardList from './CardList';
+import CardList from '../CardList';
 
 describe('CardList component', () => {
-  const mockItems = [{
-    id: 1,
-    name: 'Rick Sanchez',
-    image: 'https://example.com/rick.png',
-    gender: 'Male',
-    species: 'Human',
-  }];
+  const mockItems = [
+    {
+      id: 1,
+      name: 'Rick Sanchez',
+      image: 'https://example.com/rick.png',
+      gender: 'Male',
+      species: 'Human',
+    },
+  ];
   test('renders list of cards', () => {
     render(<CardList items={mockItems} />);
 

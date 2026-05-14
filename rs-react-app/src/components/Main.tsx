@@ -1,12 +1,11 @@
 import React from 'react';
-import Search from './Search';
-import CardList from './CardList';
-import BuggyButton from './BuggyButton';
+import Search from './Search/Search';
+import CardList from './CardList/CardList';
+import BuggyButton from './BuggyButton/BuggyButton';
 import { fetchCharacters } from '../services/api';
 import type { Character } from '../services/api';
 
-
-type State = {
+type PageState = {
   items: Character[];
   search: string;
   page: number;
@@ -15,135 +14,113 @@ type State = {
   hasNext: boolean;
 };
 
-class Main extends React.Component<Record<string, never>, State> {
-  state: State = {
+export default function Main () {
+  const [pageState, setPageState] = React.useState<PageState>({
     items: [],
-    search: '',
+    search: localStorage.getItem('search') || '',
     page: 1,
     loading: false,
     error: null,
     hasNext: true,
-  };
+  });
 
-  componentDidMount() {
-    const saved = localStorage.getItem('search') || '';
+  const { items, search, loading, error, page, hasNext } = pageState;
 
-    this.setState(
-      {
-        search: saved,
-      },
-      () => {
-        this.loadData();
+  React.useEffect(() => {
+    async function loadData() {
+      setPageState((prev) => ({ ...prev, loading: true, error: null }));
+
+      try {
+        const data = await fetchCharacters(search, page);
+
+        setPageState((prev) => ({
+          ...prev,
+          items: data.results,
+          hasNext: data.info?.next !== null,
+          loading: false,
+        }));
+        console.log('search', search);
+        console.log('data', data);
+      } catch (e: unknown) {
+        console.error(e);
+
+        setPageState((prev) => ({
+          ...prev,
+          error: 'Failed to load data',
+          loading: false,
+        }));
       }
-    );
-  }
-
-  componentDidUpdate(
-    _prevProps: Readonly<Record<string, never>>,
-    prevState: Readonly<State>
-  ) {
-    if (
-      prevState.search !== this.state.search ||
-      prevState.page !== this.state.page
-    ) {
-      this.loadData();
     }
-  }
 
-  loadData = async () => {
-    const { search, page } = this.state;
+    loadData();
+  }, [search, page]);
 
-    this.setState({ loading: true, error: null });
 
-    try {
-      const data = await fetchCharacters(search, page);
-
-      this.setState({
-        items: data.results,
-        hasNext: data.info?.next !== null,
-        loading: false,
-      });
-    } catch (e: unknown) {
-      console.error(e);
-      this.setState({
-        error: 'Failed to load data',
-        loading: false,
-      });
-    }
-  };
-
-  handleSearch = (value: string) => {
+  function handleSearch (value: string) {
     const trimmed = value.trim();
 
-    if (trimmed === this.state.search) return;
+    if (trimmed === pageState.search) return;
 
     localStorage.setItem('search', trimmed);
 
-    this.setState({
+    setPageState(prev => ({
+      ...prev,
       search: trimmed,
       page: 1,
-    });
+    }));
   };
 
-  nextPage = () => {
-    if (!this.state.hasNext || this.state.loading) return;
+  function nextPage () {
+    if (!pageState.hasNext || pageState.loading) return;
 
-    this.setState((prev) => ({
+    setPageState((prev) => ({
+      ...prev,
       page: prev.page + 1,
     }));
   };
 
-  prevPage = () => {
-    if (this.state.page <= 1) return;
+  function prevPage () {
+    if (pageState.page <= 1) return;
 
-    this.setState((prev) => ({
+    setPageState((prev) => ({
+      ...prev,
       page: prev.page - 1,
     }));
   };
 
-  render() {
-    const { items, loading, error, page, hasNext } = this.state;
+  console.log('fetched data', pageState.items)
 
-    return (
-      <main style={{ padding: 20 }}>
-        {/* SEARCH */}
-        <Search onSearch={this.handleSearch} />
+  return (
+    <main className='p-5'>
+      <Search onSearch={handleSearch} />
 
-        {/* LOADING */}
-        {loading && <p>Loading...</p>}
+      {loading && <p>Loading...</p>}
 
-        {/* BUGGY BUTTON */}
-        <BuggyButton />
+      <BuggyButton />
 
-        {/* ERROR */}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className='text-red-700'>{error}</p>}
 
-        {/* LIST */}
-        <CardList items={items} />
+      <CardList items={items} />
 
-        {/* PAGINATION */}
-        <div style={{ marginTop: 20 }}>
-          <button
-            style={{ cursor: 'pointer' }}
-            onClick={this.prevPage}
-            disabled={page === 1}
-          >
-            Prev
-          </button>
+      <div className='mt-5 flex justify-center items-center gap-4'>
+        <button className='cursor-pointer bg-indigo-700 text-white px-4 py-1.5 hover:bg-indigo-600 transition-all duration-500 rounded-md'
+          onClick={prevPage}
+          disabled={page === 1}
+        >
+          Prev
+        </button>
 
-          <span style={{ margin: '0 10px' }}>Page {page}</span>
+        <span className='mx-2.5 my-0 text-xl'>{page}</span>
 
-          <button
-            style={{ cursor: 'pointer' }}
-            onClick={this.nextPage}
-            disabled={!hasNext}
-          >
-            Next
-          </button>
-        </div>
-      </main>
-    );
-  }
+        <button className='cursor-pointer bg-indigo-700 text-white px-4 py-1.5 hover:bg-indigo-600 transition-all duration-500 rounded-md'
+          onClick={nextPage}
+          disabled={!hasNext}
+        >
+          Next
+        </button>
+      </div>
+    </main>
+  );
 }
 
-export default Main;
+
