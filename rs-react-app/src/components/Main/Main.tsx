@@ -6,8 +6,6 @@ import { fetchCharacters } from '../../services/api';
 import type { Character } from '../../services/api';
 import { useSearchParams } from 'react-router-dom';
 
-//search: string;
-//page: number;
 type PageState = {
   items: Character[];
   loading: boolean;
@@ -20,8 +18,16 @@ export default function Main() {
   const page = Number(searchParams.get('page')) || 1;
   const search = searchParams.get('search') || '';
 
-  //search: localStorage.getItem('search') || '',
-  //page: 1,
+  React.useEffect(() => {
+    // Ensure page always exists in URL
+    if (!searchParams.get('page')) {
+      const params = new URLSearchParams(searchParams);
+      params.set('page', '1');
+
+      setSearchParams(params, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
   const [pageState, setPageState] = React.useState<PageState>({
     items: [],
     loading: false,
@@ -66,31 +72,18 @@ export default function Main() {
     localStorage.setItem('search', trimmed);
 
     const params = new URLSearchParams(searchParams);
-    params.set('search', trimmed);
+    if (trimmed) {
+      params.set('search', trimmed);
+    } else {
+      params.delete('search');
+    }
+
     params.set('page', '1');
-  }
-  /*
-  function handlePageChange (newPage: number) {
-    setSearchParams({
-      search,
-      page: String(newPage),
-    });
-  };
-
-  function handleURLSearch (value: string) {
-    setSearchParams({
-      search: value,
-      page: '1',
-    });
-  }; */
-
-  /* function updatePage (page: number) {
-    const params = new URLSearchParams(searchParams);
-
-    params.set('page', String(page));
 
     setSearchParams(params);
-  }; */
+    /* params.set('search', trimmed);
+    params.set('page', '1'); */
+  }
 
   function nextPage() {
     if (!pageState.hasNext || pageState.loading) return;
@@ -98,10 +91,6 @@ export default function Main() {
     const params = new URLSearchParams(searchParams);
     params.set('page', String(page + 1));
     setSearchParams(params);
-    /*  setPageState((prev) => ({
-      ...prev,
-      page: prev.page + 1,
-    })); */
   }
 
   function prevPage() {
@@ -110,10 +99,6 @@ export default function Main() {
     const params = new URLSearchParams(searchParams);
     params.set('page', String(page - 1));
     setSearchParams(params);
-    /*  setPageState((prev) => ({
-      ...prev,
-      page: prev.page - 1,
-    })); */
   }
 
   return (
