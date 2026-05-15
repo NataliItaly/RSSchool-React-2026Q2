@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import ErrorBoundary from './ErrorBoundary';
-import BuggyButton from './BuggyButton/BuggyButton';
+import BuggyButton from '../BuggyButton/BuggyButton';
 
 describe('ErrorBoundary component', () => {
   test('renders children with no error', () => {

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import BuggyButton from '../BuggyButton';
+import BuggyButton from './BuggyButton';
 
 describe('BuggyButton component', () => {
   test('renders Crash App text', () => {

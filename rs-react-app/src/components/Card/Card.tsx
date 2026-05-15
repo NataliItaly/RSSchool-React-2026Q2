@@ -5,7 +5,6 @@ type CardProps = {
 };
 
 export default function Card({item}: CardProps) {
-  console.log(item)
   return (
     <div className="border rounded-xl border-gray-300 p-3 pt-2 w-52">
       <h4 className="min-h-14 flex gap-1.5 justify-between items-center">

@@ -1,6 +1,6 @@
 import { describe, test, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Search from '../Search';
+import Search from './Search';
 
 describe('Search component', () => {
   test('renders Search button', () => {

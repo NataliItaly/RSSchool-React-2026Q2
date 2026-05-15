@@ -26,16 +26,21 @@ describe('Card component', () => {
     expect(image).toHaveAttribute('alt', 'Rick Sanchez');
   });
 
+  test('does not render image if image is missing', () => {
+    const itemWithoutImage = {
+      ...mockItem,
+      image: '',
+    };
+
+    render(<Card item={itemWithoutImage} />);
+
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+  });
+
   test('renders gender', () => {
     render(<Card item={mockItem} />);
 
     expect(screen.getByText(/Male/i)).toBeInTheDocument();
-  });
-
-  test('renders species', () => {
-    render(<Card item={mockItem} />);
-
-    expect(screen.getByText(/Human/i)).toBeInTheDocument();
   });
 
   test('renders male gender in blue color', () => {
@@ -43,9 +48,7 @@ describe('Card component', () => {
 
     const gender = screen.getByText('Male');
 
-    expect(gender).toHaveStyle({
-      color: 'rgb(0, 0, 255)',
-    });
+    expect(gender).toHaveClass('text-indigo-700');
   });
 
   test('renders female gender with correct color', () => {
@@ -58,8 +61,51 @@ describe('Card component', () => {
 
     const gender = screen.getByText('Female');
 
-    expect(gender).toHaveStyle({
-      color: 'rgb(248, 30, 68)',
-    });
+    expect(gender).toHaveClass('text-pink-700');
+  });
+
+  test('renders unknown gender with orange color', () => {
+    const unknownGenderItem = {
+      ...mockItem,
+      gender: 'unknown',
+    };
+
+    render(<Card item={unknownGenderItem} />);
+
+    const gender = screen.getByText('unknown');
+
+    expect(gender).toHaveClass('text-orange-700');
+  });
+
+  test('renders species', () => {
+    render(<Card item={mockItem} />);
+
+    expect(screen.getByText(/Human/i)).toBeInTheDocument();
+  });
+
+  test('renders Human species with violet color', () => {
+    const humanItem = {
+      ...mockItem,
+      species: 'Human',
+    };
+
+    render(<Card item={humanItem} />);
+
+    const species = screen.getByText('Human');
+
+    expect(species).toHaveClass('text-violet-600');
+  });
+
+  test('renders non-human species with green color', () => {
+    const alienItem = {
+      ...mockItem,
+      species: 'Alien',
+    };
+
+    render(<Card item={alienItem} />);
+
+    const species = screen.getByText('Alien');
+
+    expect(species).toHaveClass('text-green-700');
   });
 });

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import * as api from '../services/api';
+import * as api from '../../services/api';
 import Main from './Main';
 
 // Mock character data
@@ -110,12 +110,10 @@ describe('Main component', () => {
   });
 
   test('search triggers loadData', async () => {
-    const searchSpy = vi
-      .spyOn(api, 'fetchCharacters')
-      .mockResolvedValueOnce({
-        results: page1Characters,
-        info: { next: null },
-      });
+    const searchSpy = vi.spyOn(api, 'fetchCharacters').mockResolvedValueOnce({
+      results: page1Characters,
+      info: { next: null },
+    });
 
     render(<Main />);
 
@@ -140,6 +138,86 @@ describe('Main component', () => {
     ).toBeInTheDocument();
   });
 
+  test('does not fetch again if search value is unchanged', async () => {
+    const fetchSpy = vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
+      results: page1Characters,
+      info: { next: null },
+    });
+
+    render(<Main />);
+
+    // initial fetch
+    await screen.findByText(/Rick/i);
+
+    const input = screen.getByRole('textbox');
+
+    fireEvent.change(input, { target: { value: '' } });
+
+    fireEvent.click(screen.getByRole('button', { name: /search/i }));
+
+    // should still only be called once
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+  });
+
+  test('loads initial search value from localStorage', async () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('Morty');
+
+    const fetchSpy = vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
+      results: page1Characters,
+      info: { next: null },
+    });
+
+    render(<Main />);
+
+    await screen.findByText(/Rick/i);
+
+    expect(fetchSpy).toHaveBeenCalledWith('Morty', 1);
+  });
+
+  test('stores search value in localStorage', async () => {
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+
+    vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
+      results: page1Characters,
+      info: { next: null },
+    });
+
+    render(<Main />);
+
+    const input = screen.getByRole('textbox');
+
+    fireEvent.change(input, { target: { value: 'Rick' } });
+
+    fireEvent.click(screen.getByRole('button', { name: /search/i }));
+
+    expect(setItemSpy).toHaveBeenCalledWith('search', 'Rick');
+  });
+
+  test('uses empty string when localStorage search is null', async () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(null);
+
+    const fetchSpy = vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
+      results: page1Characters,
+      info: { next: null },
+    });
+
+    render(<Main />);
+
+    await screen.findByText(/Rick/i);
+
+    expect(fetchSpy).toHaveBeenCalledWith('', 1);
+  });
+  
+  test('renders loading state during fetch', () => {
+    vi.spyOn(api, 'fetchCharacters').mockImplementation(
+      () => new Promise(() => {})
+    );
+
+    render(<Main />);
+
+    expect(screen.getByText(/Loading/i)).toBeInTheDocument();
+  });
+
   test('handles pagination back and forth', async () => {
     const fetchSpy = vi
       .spyOn(api, 'fetchCharacters')
@@ -161,5 +239,85 @@ describe('Main component', () => {
     expect(await screen.findByText(/Rick/i)).toBeInTheDocument();
 
     expect(fetchSpy).toHaveBeenCalledTimes(3);
+  });
+
+  test('does not go below page 1', async () => {
+    const fetchSpy = vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
+      results: page1Characters,
+      info: { next: 2 },
+    });
+
+    render(<Main />);
+
+    await screen.findByText(/Rick/i);
+
+    fireEvent.click(screen.getByRole('button', { name: /prev/i }));
+
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(screen.getByText('1')).toBeInTheDocument();
+  });
+
+  test('does not load next page when hasNext is false', async () => {
+    const fetchSpy = vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
+      results: page1Characters,
+      info: { next: null },
+    });
+
+    render(<Main />);
+
+    await screen.findByText(/Rick/i);
+
+    const nextButton = screen.getByRole('button', { name: /next/i });
+
+    expect(nextButton).toBeDisabled();
+
+    fireEvent.click(nextButton);
+
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+  });
+
+  test('handles missing info object', async () => {
+    vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
+      results: page1Characters,
+      info: undefined,
+    });
+
+    render(<Main />);
+
+    await screen.findByText(/Rick/i);
+
+    const nextButton = screen.getByRole('button', { name: /next/i });
+
+    expect(nextButton).toBeEnabled();
+  });
+
+  test('handles non-Error rejection', async () => {
+    vi.spyOn(api, 'fetchCharacters').mockRejectedValue('oops');
+
+    render(<Main />);
+
+    expect(await screen.findByText(/Failed to load data/i)).toBeInTheDocument();
+  });
+
+  test('shows loading state while fetching', async () => {
+    vi.spyOn(api, 'fetchCharacters').mockImplementation(
+      () =>
+        new Promise((resolve) =>
+          setTimeout(
+            () =>
+              resolve({
+                results: page1Characters,
+                info: { next: null },
+              }),
+            100
+          )
+        )
+    );
+
+    render(<Main />);
+
+    expect(screen.getByText(/Loading/i)).toBeInTheDocument();
+
+    expect(await screen.findByText(/Rick/i)).toBeInTheDocument();
   });
 });
