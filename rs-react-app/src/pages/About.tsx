@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function About() {
   return (
     <div className="w-full min-h-full flex justify-center items-center">
@@ -30,6 +32,12 @@ export default function About() {
         >
           <img className="w-full" src="/rss-logo.svg" alt="RS School logo" />
         </a>
+        <Link
+          to="/"
+          className="flex justify-center items-center px-5 py-2.5 bg-pink-700 text-white rounded-md hover:bg-pink-500 transition-all duration-500 cursor-pointer"
+        >
+          Back to Main
+        </Link>
       </div>
     </div>
   );

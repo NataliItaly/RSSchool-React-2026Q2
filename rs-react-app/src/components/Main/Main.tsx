@@ -4,27 +4,32 @@ import CardList from '../CardList/CardList';
 import BuggyButton from '../BuggyButton/BuggyButton';
 import { fetchCharacters } from '../../services/api';
 import type { Character } from '../../services/api';
+import { useSearchParams } from 'react-router-dom';
 
+//search: string;
+//page: number;
 type PageState = {
   items: Character[];
-  search: string;
-  page: number;
   loading: boolean;
   error: string | null;
   hasNext: boolean;
 };
 
 export default function Main() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get('page')) || 1;
+  const search = searchParams.get('search') || '';
+
+  //search: localStorage.getItem('search') || '',
+  //page: 1,
   const [pageState, setPageState] = React.useState<PageState>({
     items: [],
-    search: localStorage.getItem('search') || '',
-    page: 1,
     loading: false,
     error: null,
     hasNext: true,
   });
 
-  const { items, search, loading, error, page, hasNext } = pageState;
+  const { items, loading, error, hasNext } = pageState;
 
   React.useEffect(() => {
     async function loadData() {
@@ -56,35 +61,61 @@ export default function Main() {
   function handleSearch(value: string) {
     const trimmed = value.trim();
 
-    if (trimmed === pageState.search) return;
+    if (trimmed === search) return;
 
     localStorage.setItem('search', trimmed);
 
-    setPageState((prev) => ({
-      ...prev,
-      search: trimmed,
-      page: 1,
-    }));
+    const params = new URLSearchParams(searchParams);
+    params.set('search', trimmed);
+    params.set('page', '1');
   }
+  /*
+  function handlePageChange (newPage: number) {
+    setSearchParams({
+      search,
+      page: String(newPage),
+    });
+  };
+
+  function handleURLSearch (value: string) {
+    setSearchParams({
+      search: value,
+      page: '1',
+    });
+  }; */
+
+  /* function updatePage (page: number) {
+    const params = new URLSearchParams(searchParams);
+
+    params.set('page', String(page));
+
+    setSearchParams(params);
+  }; */
 
   function nextPage() {
     if (!pageState.hasNext || pageState.loading) return;
 
-    setPageState((prev) => ({
+    const params = new URLSearchParams(searchParams);
+    params.set('page', String(page + 1));
+    setSearchParams(params);
+    /*  setPageState((prev) => ({
       ...prev,
       page: prev.page + 1,
-    }));
+    })); */
   }
 
   function prevPage() {
-    if (pageState.page <= 1) return;
+    if (page === 1 || pageState.loading) return;
 
-    setPageState((prev) => ({
+    const params = new URLSearchParams(searchParams);
+    params.set('page', String(page - 1));
+    setSearchParams(params);
+    /*  setPageState((prev) => ({
       ...prev,
       page: prev.page - 1,
-    }));
+    })); */
   }
-  
+
   return (
     <main className="p-5">
       <Search onSearch={handleSearch} />
