@@ -4,7 +4,8 @@ import CardList from '../CardList/CardList';
 import BuggyButton from '../BuggyButton/BuggyButton';
 import { fetchCharacters } from '../../services/api';
 import type { Character } from '../../services/api';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Outlet } from 'react-router-dom';
+import Pagination from '../Pagination';
 
 type PageState = {
   items: Character[];
@@ -81,8 +82,6 @@ export default function Main() {
     params.set('page', '1');
 
     setSearchParams(params);
-    /* params.set('search', trimmed);
-    params.set('page', '1'); */
   }
 
   function nextPage() {
@@ -113,25 +112,13 @@ export default function Main() {
 
       <CardList items={items} />
 
-      <div className="mt-5 flex justify-center items-center gap-4">
-        <button
-          className="cursor-pointer bg-indigo-700 text-white px-4 py-1.5 hover:bg-indigo-600 disabled:opacity-70 disabled:hover:bg-indigo-700 transition-all duration-500 rounded-md"
-          onClick={prevPage}
-          disabled={page === 1}
-        >
-          Prev
-        </button>
+      <Pagination prevPage={prevPage} page={page} nextPage={nextPage} hasNext={hasNext}/>
 
-        <span className="mx-2.5 my-0 text-xl">{page}</span>
-
-        <button
-          className="cursor-pointer bg-indigo-700 text-white px-4 py-1.5 hover:bg-indigo-600 disabled:opacity-70 disabled:hover:bg-indigo-700 transition-all duration-500 rounded-md"
-          onClick={nextPage}
-          disabled={!hasNext}
-        >
-          Next
-        </button>
+      <div className="w-1/2">
+        <Outlet />
       </div>
+
+
     </main>
   );
 }

@@ -7,3 +7,11 @@
 #root {
   min-height: 100vh;
 }
+
+.card:hover img {
+  transform: scale(1.1);
+}
+
+.card:hover h4 b {
+  color: #f714f7;
+}

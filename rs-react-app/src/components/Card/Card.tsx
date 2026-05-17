@@ -6,13 +6,13 @@ type CardProps = {
 
 export default function Card({item}: CardProps) {
   return (
-    <div className="border rounded-xl border-gray-300 p-3 pt-2 w-52">
+    <div className="border rounded-xl border-gray-300 p-3 pt-2 w-52 cursor-pointer card">
       <h4 className="min-h-14 flex gap-1.5 justify-between items-center">
-        Name <b className="text-indigo-700 text-lg text-right">{item.name}</b>
+        Name <b className="text-indigo-700 text-lg text-right transition-all duration-700">{item.name}</b>
       </h4>
-      <div>
+      <div className='overflow-hidden'>
         {item.image ? (
-          <img className="w-full rounded-md" src={item.image} alt={item.name} />
+          <img className="w-full rounded-md transition-transform duration-700" src={item.image} alt={item.name} />
         ) : null}
       </div>
 
