@@ -5,7 +5,7 @@ import BuggyButton from '../BuggyButton/BuggyButton';
 import { fetchCharacters } from '../../services/api';
 import type { Character } from '../../services/api';
 import { useSearchParams, Outlet } from 'react-router-dom';
-import Pagination from '../Pagination';
+import Pagination from '../Pagination/Pagination';
 
 type PageState = {
   items: Character[];

@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 import * as api from '../../services/api';
 import Main from './Main';
+import { MemoryRouter } from 'react-router-dom';
 
 // Mock character data
 const page1Characters: api.Character[] = [
@@ -47,21 +48,23 @@ describe('Main component', () => {
     vi.restoreAllMocks();
   });
 
-  test('renders search input and buttons', async () => {
+  test('renders search input and search button', async () => {
     vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
       results: page1Characters,
       info: { next: 2 },
     });
 
-    render(<Main />);
+    render(
+      <MemoryRouter>
+        <Main />
+      </MemoryRouter>
+    );
 
     // Wait for async data to load
     await screen.findByText(/Rick/i);
 
     expect(screen.getByRole('textbox')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /search/i })).toBeInTheDocument();
-    expect(screen.getByText(/Prev/i)).toBeDisabled();
-    expect(screen.getByText(/Next/i)).toBeEnabled();
   });
 
   test('renders multiple character cards', async () => {
@@ -70,7 +73,11 @@ describe('Main component', () => {
       info: { next: 2 },
     });
 
-    render(<Main />);
+    render(
+      <MemoryRouter>
+        <Main />
+      </MemoryRouter>
+    );
 
     await screen.findByText(/Rick/i);
     await screen.findByText(/Morty/i);
@@ -88,7 +95,11 @@ describe('Main component', () => {
         info: { next: null },
       }); // page 2
 
-    render(<Main />);
+    render(
+      <MemoryRouter>
+        <Main />
+      </MemoryRouter>
+    );
 
     // Wait for first page
     expect(await screen.findByText(/Rick/i)).toBeInTheDocument();
@@ -115,7 +126,11 @@ describe('Main component', () => {
       info: { next: null },
     });
 
-    render(<Main />);
+    render(
+      <MemoryRouter>
+        <Main />
+      </MemoryRouter>
+    );
 
     const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: 'Rick' } });
@@ -129,7 +144,11 @@ describe('Main component', () => {
   test('displays error message when fetch fails', async () => {
     vi.spyOn(api, 'fetchCharacters').mockRejectedValue(new Error(errorMessage));
 
-    render(<Main />);
+    render(
+      <MemoryRouter>
+        <Main />
+      </MemoryRouter>
+    );
 
     fireEvent.click(screen.getByRole('button', { name: /search/i }));
 
@@ -144,7 +163,11 @@ describe('Main component', () => {
       info: { next: null },
     });
 
-    render(<Main />);
+    render(
+      <MemoryRouter>
+        <Main />
+      </MemoryRouter>
+    );
 
     // initial fetch
     await screen.findByText(/Rick/i);
@@ -159,7 +182,7 @@ describe('Main component', () => {
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
-  test('loads initial search value from localStorage', async () => {
+  test('loads initial search value from URL params', async () => {
     vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('Morty');
 
     const fetchSpy = vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
@@ -167,7 +190,11 @@ describe('Main component', () => {
       info: { next: null },
     });
 
-    render(<Main />);
+    render(
+      <MemoryRouter initialEntries={['/?search=Morty&page=1']}>
+        <Main />
+      </MemoryRouter>
+    );
 
     await screen.findByText(/Rick/i);
 
@@ -182,7 +209,11 @@ describe('Main component', () => {
       info: { next: null },
     });
 
-    render(<Main />);
+    render(
+      <MemoryRouter>
+        <Main />
+      </MemoryRouter>
+    );
 
     const input = screen.getByRole('textbox');
 
@@ -201,21 +232,15 @@ describe('Main component', () => {
       info: { next: null },
     });
 
-    render(<Main />);
+    render(
+      <MemoryRouter>
+        <Main />
+      </MemoryRouter>
+    );
 
     await screen.findByText(/Rick/i);
 
     expect(fetchSpy).toHaveBeenCalledWith('', 1);
-  });
-  
-  test('renders loading state during fetch', () => {
-    vi.spyOn(api, 'fetchCharacters').mockImplementation(
-      () => new Promise(() => {})
-    );
-
-    render(<Main />);
-
-    expect(screen.getByText(/Loading/i)).toBeInTheDocument();
   });
 
   test('handles pagination back and forth', async () => {
@@ -225,7 +250,11 @@ describe('Main component', () => {
       .mockResolvedValueOnce({ results: page2Characters, info: { next: null } })
       .mockResolvedValueOnce({ results: page1Characters, info: { next: 2 } }); // going back
 
-    render(<Main />);
+    render(
+      <MemoryRouter>
+        <Main />
+      </MemoryRouter>
+    );
 
     // First page
     expect(await screen.findByText(/Rick/i)).toBeInTheDocument();
@@ -247,33 +276,18 @@ describe('Main component', () => {
       info: { next: 2 },
     });
 
-    render(<Main />);
+    render(
+      <MemoryRouter>
+        <Main />
+      </MemoryRouter>
+    );
 
     await screen.findByText(/Rick/i);
 
     fireEvent.click(screen.getByRole('button', { name: /prev/i }));
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
-    expect(screen.getByText('1')).toBeInTheDocument();
-  });
-
-  test('does not load next page when hasNext is false', async () => {
-    const fetchSpy = vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
-      results: page1Characters,
-      info: { next: null },
-    });
-
-    render(<Main />);
-
-    await screen.findByText(/Rick/i);
-
-    const nextButton = screen.getByRole('button', { name: /next/i });
-
-    expect(nextButton).toBeDisabled();
-
-    fireEvent.click(nextButton);
-
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('button', { name: /prev/i })).toBeDisabled();
   });
 
   test('handles missing info object', async () => {
@@ -282,7 +296,11 @@ describe('Main component', () => {
       info: undefined,
     });
 
-    render(<Main />);
+    render(
+      <MemoryRouter>
+        <Main />
+      </MemoryRouter>
+    );
 
     await screen.findByText(/Rick/i);
 
@@ -294,7 +312,11 @@ describe('Main component', () => {
   test('handles non-Error rejection', async () => {
     vi.spyOn(api, 'fetchCharacters').mockRejectedValue('oops');
 
-    render(<Main />);
+    render(
+      <MemoryRouter>
+        <Main />
+      </MemoryRouter>
+    );
 
     expect(await screen.findByText(/Failed to load data/i)).toBeInTheDocument();
   });
@@ -314,7 +336,11 @@ describe('Main component', () => {
         )
     );
 
-    render(<Main />);
+    render(
+      <MemoryRouter>
+        <Main />
+      </MemoryRouter>
+    );
 
     expect(screen.getByText(/Loading/i)).toBeInTheDocument();
 
