@@ -346,4 +346,5 @@ describe('Main component', () => {
 
     expect(await screen.findByText(/Rick/i)).toBeInTheDocument();
   });
+
 });

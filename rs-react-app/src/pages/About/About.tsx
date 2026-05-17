@@ -22,7 +22,7 @@ export default function About() {
           rel="noopener noreferrer"
           className="block w-14 h-14 rounded-full border-4 border-[#BFDE42] overflow-hidden hover:rotate-y-180 transition-all duration-700"
         >
-          <img className="w-full" src="/github.svg" alt="GitJub Profile" />
+          <img className="w-full" src="/github.svg" alt="GitHub Profile" />
         </a>
         <a
           href="https://rs.school"
