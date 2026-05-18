@@ -5,7 +5,7 @@ describe('Header component', () => {
   test('renders Header title', () => {
     render(<Header  />);
 
-    expect(screen.getByText(/Search App/i)).toBeInTheDocument();
+    expect(screen.getByText(/Rick and Morty App/i)).toBeInTheDocument();
   });
   test('renders Header component', () => {
     render(<Header />);
@@ -16,6 +16,6 @@ describe('Header component', () => {
     render(<Header />);
 
     const heading = screen.getByRole('heading', { level: 2 });
-    expect(heading).toHaveTextContent('Search App');
+    expect(heading).toHaveTextContent('Rick and Morty App');
   });
 });
