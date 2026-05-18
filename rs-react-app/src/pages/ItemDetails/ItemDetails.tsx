@@ -43,11 +43,58 @@ export default function ItemDetails() {
   console.log(character)
 
   return (
-    <div>
-      <h2>{character.name}</h2>
-      <img src={character.image} alt={character.name} />
-      <p>{character.gender}</p>
-      <p>{character.species}</p>
+    <div className="flex flex-col justify-center items-center">
+      <h2 className="text-center text-2xl font-bold text-indigo-700 text-bold">
+        {character.name}
+      </h2>
+      <img
+        className="block mx-auto my-4 rounded-md"
+        src={character.image}
+        alt={character.name}
+      />
+      <p className="w-fit">
+        Gender:{' '}
+        <b
+          className={`text-lg
+            ${character.gender === 'Male'
+              ? 'text-indigo-700'
+              : character.gender === 'Female'
+                ? 'text-pink-700'
+                : 'text-orange-700'}`}
+        >
+          {character.gender}
+        </b>
+      </p>
+      <p>
+        Species:{' '}
+        <b
+          className={` text-lg
+            ${character.species === 'Human' ? 'text-violet-600' : 'text-green-700'}`}
+        >
+          {character.species}
+        </b>
+      </p>
+      <p>
+        Status:{' '}
+        <b
+          className={`text-lg ${character.status === 'alive' ? 'text-green-700' : 'text-red-700'}`}
+        >
+          {character.status}
+        </b>
+      </p>
+      <p>
+        Location:{' '}
+        <b className="text-blue-800 text-lg">
+          {character?.location?.name
+            ? character.location.name.split(' ')[0]
+            : 'Unknown location'}
+        </b>
+      </p>
     </div>
   );
+}
+
+{
+  /**
+    */
 }

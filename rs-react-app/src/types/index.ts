@@ -5,4 +5,6 @@ export interface CardItem {
   gender?: string;
   image?: string;
   species?: string;
+  status?: string;
+  location?: {name: string};
 }

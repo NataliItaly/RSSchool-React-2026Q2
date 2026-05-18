@@ -111,9 +111,9 @@ export default function Main() {
   }
 
   return (
-    <main className="flex gap-4 p-5">
+    <main className="flex gap-4">
       <div
-        className={`transition-all ${detailsOpen ? 'w-1/2' : 'w-full'}`}
+        className={`transition-all p-5 ${detailsOpen ? 'w-1/2' : 'w-full'}`}
         onClick={() => detailsOpen && closeDetails()}
       >
         <Search onSearch={handleSearch} />
@@ -136,10 +136,13 @@ export default function Main() {
 
       {detailsOpen && (
         <div
-          className="w-1/2 border-l pl-4 relative"
+          className="w-1/2 pl-4 relative bg-amber-100  p-5"
           onClick={(e) => e.stopPropagation()}
         >
-          <button className="absolute right-2 top-2" onClick={closeDetails}>
+          <button
+            className="absolute right-3 top-3 cursor-pointer font-bold hover:text-indigo-800 transition-all duration-300"
+            onClick={closeDetails}
+          >
             ✕
           </button>
 
