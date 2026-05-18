@@ -36,6 +36,16 @@ export default function Main() {
     hasNext: true,
   });
 
+  const detailsId = searchParams.get('details');
+  const detailsOpen = !!detailsId;
+
+  function closeDetails() {
+    const params = new URLSearchParams(searchParams);
+    params.delete('details');
+    setSearchParams(params);
+  }
+
+
   const { items, loading, error, hasNext } = pageState;
 
   React.useEffect(() => {
@@ -101,24 +111,41 @@ export default function Main() {
   }
 
   return (
-    <main className="p-5">
-      <Search onSearch={handleSearch} />
+    <main className="flex gap-4 p-5">
+      <div
+        className={`transition-all ${detailsOpen ? 'w-1/2' : 'w-full'}`}
+        onClick={() => detailsOpen && closeDetails()}
+      >
+        <Search onSearch={handleSearch} />
 
-      {loading && <p>Loading...</p>}
+        {loading && <p>Loading...</p>}
 
-      <BuggyButton />
+        <BuggyButton />
 
-      {error && <p className="text-red-700">{error}</p>}
+        {error && <p className="text-red-700">{error}</p>}
 
-      <CardList items={items} />
+        <CardList items={items} />
 
-      <Pagination prevPage={prevPage} page={page} nextPage={nextPage} hasNext={hasNext}/>
-
-      <div className="w-1/2">
-        <Outlet />
+        <Pagination
+          prevPage={prevPage}
+          page={page}
+          nextPage={nextPage}
+          hasNext={hasNext}
+        />
       </div>
 
+      {detailsOpen && (
+        <div
+          className="w-1/2 border-l pl-4 relative"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button className="absolute right-2 top-2" onClick={closeDetails}>
+            ✕
+          </button>
 
+          <Outlet />
+        </div>
+      )}
     </main>
   );
 }
