@@ -40,7 +40,6 @@ export default function ItemDetails() {
     return <p>No character</p>;
   }
 
-  console.log(character)
 
   return (
     <div className="flex flex-col justify-center items-center">
