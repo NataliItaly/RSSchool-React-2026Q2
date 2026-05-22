@@ -135,17 +135,19 @@ export default function Main() {
 
       {detailsOpen && (
         <div
-          className="w-1/2 pl-4 relative bg-amber-100  p-5"
+          className="w-1/2 min-h-full pl-4 relative"
           onClick={(e) => e.stopPropagation()}
         >
-          <button
-            className="absolute right-3 top-3 cursor-pointer font-bold hover:text-indigo-800 transition-all duration-300"
-            onClick={closeDetails}
-          >
-            ✕
-          </button>
+          <div className="w-1/2 h-fit fixed top-[72px] rounded-lg right-0 bg-amber-100 p-5">
+            <button
+              className="absolute right-3 top-3 cursor-pointer font-bold hover:text-indigo-800 transition-all duration-300"
+              onClick={closeDetails}
+            >
+              ✕
+            </button>
 
-          <Outlet />
+            <Outlet />
+          </div>
         </div>
       )}
     </main>
