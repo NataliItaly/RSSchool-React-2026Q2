@@ -17,7 +17,7 @@ type PageState = {
 export default function Main() {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page')) || 1;
-  const search = searchParams.get('search') || '';
+  const search = searchParams.get('search') ?? localStorage.getItem('search') ?? '';
 
   React.useEffect(() => {
     // Ensure page always exists in URL
@@ -80,9 +80,8 @@ export default function Main() {
 
     if (trimmed === search) return;
 
-    localStorage.setItem('search', trimmed);
-
     const params = new URLSearchParams(searchParams);
+
     if (trimmed) {
       params.set('search', trimmed);
     } else {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 type Props = {
   onSearch: (value: string) => void;
@@ -10,9 +11,10 @@ type SearchState = {
 };
 
 export default function Search({ onSearch }: Props) {
+  const [savedSearch, setSavedSearch] = useLocalStorage('search', '');
   const [searchState, setSearchState] = React.useState<SearchState>({
-    value: '',
-    lastSearch: '',
+    value: savedSearch,
+    lastSearch: savedSearch,
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
@@ -23,8 +25,7 @@ export default function Search({ onSearch }: Props) {
     const trimmed = searchState.value.trim();
 
     if (trimmed === searchState.lastSearch) return;
-
-    localStorage.setItem('search', trimmed);
+    setSavedSearch(trimmed);
 
     setSearchState((prev) => ({ ...prev, lastSearch: trimmed }));
 
