@@ -3,12 +3,20 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.tsx'
 import { RouterProvider } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import { ThemeProvider } from './context/ThemeContext.tsx'
 import { router } from './app/router.tsx'
+import { store } from './store/index.ts'
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
-      <RouterProvider router={router} />
+      <Provider store={store}>
+        <ThemeProvider>
+          <RouterProvider router={router} />
+        </ThemeProvider>
+      </Provider>
     </ErrorBoundary>
   </StrictMode>
 );
