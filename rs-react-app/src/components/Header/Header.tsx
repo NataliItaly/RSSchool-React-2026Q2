@@ -2,6 +2,7 @@ import { useTheme } from "../../context/useTheme";
 
 export default function Header () {
   const {theme, setTheme} = useTheme()
+  console.log('Header theme:', theme);
 
   return (
     <header
@@ -12,10 +13,15 @@ export default function Header () {
         Rick and Morty App
       </h2>
       <select
-        className="absolute top-4 right-4 dark:bg-gray-800
+        className="absolute top-4 right-4 px-2 py-1 rounded-md cursor-pointer dark:bg-gray-800
           dark:text-white"
         value={theme}
-        onChange={(e) => setTheme(e.target.value as 'light' | 'dark')}
+        onChange={(e) => {
+          const value = e.target.value as 'light' | 'dark';
+
+          console.log('Header setTheme', value);
+          setTheme(e.target.value as 'light' | 'dark')
+        }}
       >
         <option value="light">Light</option>
         <option value="dark">Dark</option>

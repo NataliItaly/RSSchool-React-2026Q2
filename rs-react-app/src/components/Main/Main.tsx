@@ -117,11 +117,11 @@ export default function Main() {
       >
         <Search onSearch={handleSearch} />
 
-        {loading && <p>Loading...</p>}
+        {loading && <p className='text-center text-lg'>Loading...</p>}
 
         <BuggyButton />
 
-        {error && <p className="text-red-700">{error}</p>}
+        {error && <p className="text-red-700 text-center text-lg">{error}</p>}
 
         <CardList items={items} />
 

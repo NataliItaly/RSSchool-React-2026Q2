@@ -1,16 +1,17 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ThemeContext, type Theme } from './theme-context';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 type ThemeProviderProps = Readonly<{ children: React.ReactNode }>
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>('light');
-
+  const [theme, setTheme] = useLocalStorage<Theme>('theme', 'light');
+  console.log('ThemeProvider render:', theme);
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);
 
-  const value = useMemo(() => ({theme, setTheme}), [theme])
+  const value = useMemo(() => ({theme, setTheme}), [theme, setTheme])
 
   return (
     <ThemeContext.Provider value={value}>
