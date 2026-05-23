@@ -110,7 +110,7 @@ export default function Main() {
   }
 
   return (
-    <main className="flex gap-4">
+    <main className="flex gap-4 dark:bg-gray-900 dark:text-white">
       <div
         className={`transition-all p-5 ${detailsOpen ? 'w-1/2' : 'w-full'}`}
         onClick={() => detailsOpen && closeDetails()}
@@ -138,7 +138,7 @@ export default function Main() {
           className="w-1/2 min-h-full pl-4 relative"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="w-1/2 h-fit fixed top-[72px] rounded-lg right-0 bg-amber-100 p-5">
+          <div className="w-1/2 h-fit fixed top-[72px] rounded-lg right-0 bg-amber-100 dark:bg-gray-800 p-5">
             <button
               className="absolute right-3 top-3 cursor-pointer font-bold hover:text-indigo-800 transition-all duration-300"
               onClick={closeDetails}

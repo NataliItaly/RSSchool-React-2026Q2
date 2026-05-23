@@ -4,22 +4,21 @@ export default function Header () {
   const {theme, setTheme} = useTheme()
 
   return (
-    <header className="p-4 border-b border-gray-300">
-      <h2 className="text-center text-indigo-800 text-4xl font-bold text-shadow-xs text-shadow-pink-500">
+    <header
+      className="p-4 border-b border-gray-300 dark:bg-gray-900
+      dark:border-gray-700"
+    >
+      <h2 className="text-center text-indigo-800 text-4xl font-bold text-shadow-xs text-shadow-pink-500 dark:text-indigo-300">
         Rick and Morty App
       </h2>
       <select
+        className="absolute top-4 right-4 dark:bg-gray-800
+          dark:text-white"
         value={theme}
-        onChange={e =>
-          setTheme(e.target.value as 'light' | 'dark')
-        }
+        onChange={(e) => setTheme(e.target.value as 'light' | 'dark')}
       >
-        <option value="light">
-          Light
-        </option>
-        <option value="dark">
-          Dark
-        </option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
       </select>
     </header>
   );
