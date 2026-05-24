@@ -6,6 +6,9 @@ import { fetchCharacters } from '../../services/api';
 import type { Character } from '../../services/api';
 import { useSearchParams, Outlet } from 'react-router-dom';
 import Pagination from '../Pagination/Pagination';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
+import { hydrateSelectedItems, type SelectedItem } from '../../store/selectedItemsSlice';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 type PageState = {
   items: Character[];
@@ -15,9 +18,21 @@ type PageState = {
 };
 
 export default function Main() {
+  const dispatch = useAppDispatch();
+  const selectedItems = useAppSelector(state => state.selectedItems.items);
+  const [storedSelectedItems, setStoredSelectedItems] = useLocalStorage<SelectedItem[]>('selectedItems', []);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page')) || 1;
   const search = searchParams.get('search') ?? localStorage.getItem('search') ?? '';
+
+  React.useEffect(() => {
+    dispatch(hydrateSelectedItems(storedSelectedItems));
+  }, []);
+
+  React.useEffect(() => {
+    setStoredSelectedItems(selectedItems);
+  }, [selectedItems]);
 
   React.useEffect(() => {
     // Ensure page always exists in URL

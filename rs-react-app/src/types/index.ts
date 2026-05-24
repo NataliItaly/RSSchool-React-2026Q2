@@ -7,4 +7,5 @@ export interface CardItem {
   species?: string;
   status?: string;
   location?: {name: string};
+  url?: string;
 }

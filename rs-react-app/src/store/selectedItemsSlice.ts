@@ -20,6 +20,10 @@ const selectedItemsSlice = createSlice({
   name: 'selectedItems',
   initialState,
   reducers: {
+    hydrateSelectedItems: (state, action: PayloadAction<SelectedItem[]>) => {
+      state.items = action.payload;
+    },
+
     selectItem: (state, action: PayloadAction<SelectedItem>) => {
       const exists = state.items.find((item) => item.id === action.payload.id);
 
@@ -38,7 +42,7 @@ const selectedItemsSlice = createSlice({
   },
 });
 
-export const { selectItem, unselectItem, unselectAll } =
+export const { hydrateSelectedItems, selectItem, unselectItem, unselectAll } =
   selectedItemsSlice.actions;
 
 export default selectedItemsSlice.reducer;
