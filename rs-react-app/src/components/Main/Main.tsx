@@ -49,6 +49,38 @@ export default function Main() {
     dispatch(unselectAll());
   }
 
+  function handleDownload() {
+    if (!selectedItems.length) return;
+
+    const headers = ['id', 'name', 'description', 'detailsUrl'];
+
+    const rows = selectedItems.map((item) => [
+      item.id,
+      `"${item.name}"`,
+      `"${item.description}"`,
+      `"${item.detailsUrl}"`,
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map((row) => row.join(',')),
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${selectedItems.length}_items.csv`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+  }
+
   const [pageState, setPageState] = React.useState<PageState>({
     items: [],
     loading: false,
@@ -175,6 +207,7 @@ export default function Main() {
         <Toolbar
           selectedItems={selectedItems}
           clearSelectedItems={clearSelectedItems}
+          handleDownload={handleDownload}
         />
       )}
     </main>
