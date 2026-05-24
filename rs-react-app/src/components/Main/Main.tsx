@@ -7,8 +7,9 @@ import type { Character } from '../../services/api';
 import { useSearchParams, Outlet } from 'react-router-dom';
 import Pagination from '../Pagination/Pagination';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
-import { hydrateSelectedItems, type SelectedItem } from '../../store/selectedItemsSlice';
+import { hydrateSelectedItems, unselectAll, type SelectedItem } from '../../store/selectedItemsSlice';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import Toolbar from '../Toolbar/Toolbar';
 
 type PageState = {
   items: Character[];
@@ -43,6 +44,10 @@ export default function Main() {
       setSearchParams(params, { replace: true });
     }
   }, [searchParams, setSearchParams]);
+
+  function clearSelectedItems() {
+    dispatch(unselectAll());
+  }
 
   const [pageState, setPageState] = React.useState<PageState>({
     items: [],
@@ -132,7 +137,7 @@ export default function Main() {
       >
         <Search onSearch={handleSearch} />
 
-        {loading && <p className='text-center text-lg'>Loading...</p>}
+        {loading && <p className="text-center text-lg">Loading...</p>}
 
         <BuggyButton />
 
@@ -164,6 +169,13 @@ export default function Main() {
             <Outlet />
           </div>
         </div>
+      )}
+
+      {selectedItems.length > 0 && (
+        <Toolbar
+          selectedItems={selectedItems}
+          clearSelectedItems={clearSelectedItems}
+        />
       )}
     </main>
   );
