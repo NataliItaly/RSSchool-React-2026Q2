@@ -6,7 +6,7 @@ type ThemeProviderProps = Readonly<{ children: React.ReactNode }>
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setTheme] = useLocalStorage<Theme>('theme', 'light');
-  console.log('ThemeProvider render:', theme);
+  
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);

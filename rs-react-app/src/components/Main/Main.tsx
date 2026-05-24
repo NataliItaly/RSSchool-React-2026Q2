@@ -54,11 +54,15 @@ export default function Main() {
 
     const headers = ['id', 'name', 'description', 'detailsUrl'];
 
+     const escapeCSV = (value: string | number) =>
+       `"${String(value).replace(/"/g, '""')}"`;
+
+
     const rows = selectedItems.map((item) => [
-      item.id,
-      `"${item.name}"`,
-      `"${item.description}"`,
-      `"${item.detailsUrl}"`,
+      escapeCSV(item.id),
+      escapeCSV(item.name),
+      escapeCSV(item.description),
+      escapeCSV(item.detailsUrl),
     ]);
 
     const csvContent = [

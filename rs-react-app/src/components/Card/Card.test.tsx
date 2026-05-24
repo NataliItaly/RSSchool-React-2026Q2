@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import Card from './Card';
+import { Provider } from 'react-redux';
+import { store } from '../../store';
 
 describe('Card component', () => {
   const mockItem = {
@@ -11,13 +13,21 @@ describe('Card component', () => {
   };
 
   test('renders character name', () => {
-    render(<Card item={mockItem} />);
+    render(
+      <Provider store={store}>
+        <Card item={mockItem} />
+      </Provider>
+    );
 
     expect(screen.getByText(/Rick Sanchez/i)).toBeInTheDocument();
   });
 
   test('renders character image', () => {
-    render(<Card item={mockItem} />);
+    render(
+      <Provider store={store}>
+        <Card item={mockItem} />
+      </Provider>
+    );
 
     const image = screen.getByRole('img');
 
@@ -32,19 +42,31 @@ describe('Card component', () => {
       image: '',
     };
 
-    render(<Card item={itemWithoutImage} />);
+    render(
+      <Provider store={store}>
+        <Card item={itemWithoutImage} />
+      </Provider>
+    );
 
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
 
   test('renders gender', () => {
-    render(<Card item={mockItem} />);
+    render(
+      <Provider store={store}>
+        <Card item={mockItem} />
+      </Provider>
+    );
 
     expect(screen.getByText(/Male/i)).toBeInTheDocument();
   });
 
   test('renders male gender in blue color', () => {
-    render(<Card item={mockItem} />);
+    render(
+      <Provider store={store}>
+        <Card item={mockItem} />
+      </Provider>
+    );
 
     const gender = screen.getByText('Male');
 
@@ -57,7 +79,11 @@ describe('Card component', () => {
       gender: 'Female',
     };
 
-    render(<Card item={femaleItem} />);
+    render(
+      <Provider store={store}>
+        <Card item={femaleItem} />
+      </Provider>
+    );
 
     const gender = screen.getByText('Female');
 
@@ -70,7 +96,11 @@ describe('Card component', () => {
       gender: 'unknown',
     };
 
-    render(<Card item={unknownGenderItem} />);
+    render(
+      <Provider store={store}>
+        <Card item={unknownGenderItem} />
+      </Provider>
+    );
 
     const gender = screen.getByText('unknown');
 
@@ -78,7 +108,11 @@ describe('Card component', () => {
   });
 
   test('renders species', () => {
-    render(<Card item={mockItem} />);
+    render(
+      <Provider store={store}>
+        <Card item={mockItem} />
+      </Provider>
+    );
 
     expect(screen.getByText(/Human/i)).toBeInTheDocument();
   });
@@ -89,7 +123,11 @@ describe('Card component', () => {
       species: 'Human',
     };
 
-    render(<Card item={humanItem} />);
+    render(
+      <Provider store={store}>
+        <Card item={humanItem} />
+      </Provider>
+    );
 
     const species = screen.getByText('Human');
 
@@ -102,7 +140,11 @@ describe('Card component', () => {
       species: 'Alien',
     };
 
-    render(<Card item={alienItem} />);
+    render(
+      <Provider store={store}>
+        <Card item={alienItem} />
+      </Provider>
+    );
 
     const species = screen.getByText('Alien');
 

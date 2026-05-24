@@ -3,6 +3,8 @@ import { vi } from 'vitest';
 import * as api from '../../services/api';
 import Main from './Main';
 import { MemoryRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from '../../store';
 
 // Mock character data
 const page1Characters: api.Character[] = [
@@ -55,9 +57,11 @@ describe('Main component', () => {
     });
 
     render(
-      <MemoryRouter>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     // Wait for async data to load
@@ -74,9 +78,11 @@ describe('Main component', () => {
     });
 
     render(
-      <MemoryRouter>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     await screen.findByText(/Rick/i);
@@ -96,9 +102,11 @@ describe('Main component', () => {
       }); // page 2
 
     render(
-      <MemoryRouter>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     // Wait for first page
@@ -127,9 +135,11 @@ describe('Main component', () => {
     });
 
     render(
-      <MemoryRouter>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     const input = screen.getByRole('textbox');
@@ -145,9 +155,11 @@ describe('Main component', () => {
     vi.spyOn(api, 'fetchCharacters').mockRejectedValue(new Error(errorMessage));
 
     render(
-      <MemoryRouter>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     fireEvent.click(screen.getByRole('button', { name: /search/i }));
@@ -164,9 +176,11 @@ describe('Main component', () => {
     });
 
     render(
-      <MemoryRouter>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     // initial fetch
@@ -191,9 +205,11 @@ describe('Main component', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={['/?search=Morty&page=1']}>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/?search=Morty&page=1']}>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     await screen.findByText(/Rick/i);
@@ -210,9 +226,11 @@ describe('Main component', () => {
     });
 
     render(
-      <MemoryRouter>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     const input = screen.getByRole('textbox');
@@ -221,7 +239,7 @@ describe('Main component', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /search/i }));
 
-    expect(setItemSpy).toHaveBeenCalledWith('search', 'Rick');
+    expect(setItemSpy).toHaveBeenCalledWith('search', JSON.stringify('Rick'));
   });
 
   test('uses empty string when localStorage search is null', async () => {
@@ -233,9 +251,11 @@ describe('Main component', () => {
     });
 
     render(
-      <MemoryRouter>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     await screen.findByText(/Rick/i);
@@ -251,9 +271,11 @@ describe('Main component', () => {
       .mockResolvedValueOnce({ results: page1Characters, info: { next: 2 } }); // going back
 
     render(
-      <MemoryRouter>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     // First page
@@ -277,9 +299,11 @@ describe('Main component', () => {
     });
 
     render(
-      <MemoryRouter>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     await screen.findByText(/Rick/i);
@@ -297,9 +321,11 @@ describe('Main component', () => {
     });
 
     render(
-      <MemoryRouter>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     await screen.findByText(/Rick/i);
@@ -313,9 +339,11 @@ describe('Main component', () => {
     vi.spyOn(api, 'fetchCharacters').mockRejectedValue('oops');
 
     render(
-      <MemoryRouter>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(await screen.findByText(/Failed to load data/i)).toBeInTheDocument();
@@ -337,9 +365,11 @@ describe('Main component', () => {
     );
 
     render(
-      <MemoryRouter>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(screen.getByText(/Loading/i)).toBeInTheDocument();

@@ -2,6 +2,8 @@ import { render, screen } from '@testing-library/react';
 import CardList from './CardList';
 import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
+import { Provider } from 'react-redux';
+import { store } from '../../store';
 
 const mockNavigate = vi.fn();
 
@@ -25,18 +27,22 @@ describe('CardList component', () => {
   ];
   test('renders list of cards', () => {
     render(
-      <MemoryRouter>
-        <CardList items={mockItems} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <CardList items={mockItems} />
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(screen.getByText(/Rick Sanchez/i)).toBeInTheDocument();
   });
   test('renders empty list without crashing', () => {
     render(
-      <MemoryRouter>
-        <CardList items={[]} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <CardList items={[]} />
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(screen.queryByText(/Rick Sanchez/i)).not.toBeInTheDocument();
@@ -48,9 +54,11 @@ describe('CardList component', () => {
     ];
 
     render(
-      <MemoryRouter>
-        <CardList items={items} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <CardList items={items} />
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(screen.getByText(/Rick/i)).toBeInTheDocument();
@@ -60,9 +68,11 @@ describe('CardList component', () => {
     const user = userEvent.setup();
 
     render(
-      <MemoryRouter>
-        <CardList items={mockItems} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <CardList items={mockItems} />
+        </MemoryRouter>
+      </Provider>
     );
 
     await user.click(screen.getByText(/Rick Sanchez/i));

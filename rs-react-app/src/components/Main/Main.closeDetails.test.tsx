@@ -4,6 +4,8 @@ import { vi } from 'vitest';
 import Main from './Main';
 import { MemoryRouter } from 'react-router-dom';
 import * as api from '../../services/api';
+import { Provider } from 'react-redux';
+import { store } from '../../store';
 
 const mockUseSearchParams = vi.fn();
 
@@ -40,9 +42,11 @@ describe('Main closeDetails', () => {
     });
 
     render(
-      <MemoryRouter>
-        <Main />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Main />
+        </MemoryRouter>
+      </Provider>
     );
 
     const closeButton = screen.getByRole('button', { name: '✕' });

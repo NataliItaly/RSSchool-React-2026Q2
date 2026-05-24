@@ -3,6 +3,11 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import Search from './Search';
 
 describe('Search component', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    vi.clearAllMocks();
+  });
+
   test('renders Search button', () => {
     const mockOnSearch = vi.fn();
     render(<Search onSearch={mockOnSearch} />);
@@ -73,7 +78,7 @@ describe('Search component', () => {
 
     fireEvent.click(button);
 
-    expect(localStorage.getItem('search')).toBe('Rick');
+    expect(localStorage.getItem('search')).toBe(JSON.stringify('Rick'));
   });
   test('does not call onSearch if same value repeated', () => {
     const mockOnSearch = vi.fn();

@@ -2,7 +2,6 @@ import { useTheme } from "../../context/useTheme";
 
 export default function Header () {
   const {theme, setTheme} = useTheme()
-  console.log('Header theme:', theme);
 
   return (
     <header
@@ -17,9 +16,6 @@ export default function Header () {
           dark:text-white"
         value={theme}
         onChange={(e) => {
-          const value = e.target.value as 'light' | 'dark';
-
-          console.log('Header setTheme', value);
           setTheme(e.target.value as 'light' | 'dark')
         }}
       >
