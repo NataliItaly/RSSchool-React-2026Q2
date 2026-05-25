@@ -39,16 +39,28 @@ const page2Characters: api.Character[] = [
 
 const errorMessage = 'Failed to load data';
 
-describe('Main component', () => {
-  beforeEach(() => {
-    // Reset localStorage mocks
-    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('');
-    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {});
-  });
+let consoleSpy: ReturnType<typeof vi.spyOn>;
 
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
+describe('Main component', () => {
+   beforeEach(() => {
+     // silence expected React/API errors
+     consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+     // localStorage mocks
+     vi.spyOn(Storage.prototype, 'getItem').mockImplementation((key) => {
+       if (key === 'selectedItems') {
+         return JSON.stringify([]);
+       }
+       return null;
+     });
+
+     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {});
+   });
+
+   afterEach(() => {
+     consoleSpy.mockRestore();
+     vi.restoreAllMocks();
+   });
 
   test('renders search input and search button', async () => {
     vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
@@ -197,7 +209,17 @@ describe('Main component', () => {
   });
 
   test('loads initial search value from URL params', async () => {
-    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('Morty');
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation((key) => {
+      if (key === 'search') {
+        return JSON.stringify('Morty');
+      }
+
+      if (key === 'selectedItems') {
+        return JSON.stringify([]);
+      }
+
+      return null;
+    });
 
     const fetchSpy = vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
       results: page1Characters,
