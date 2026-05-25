@@ -1,1 +1,1 @@
-# RSSchool-React-2026Q2
+# React project setup. Class components. Error boundary
