@@ -1,6 +1,17 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import ErrorBoundary from './ErrorBoundary';
 import BuggyButton from '../BuggyButton/BuggyButton';
+import { vi, beforeEach, afterEach } from 'vitest';
+
+let consoleSpy: ReturnType<typeof vi.spyOn>;
+
+beforeEach(() => {
+  consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+});
+
+afterEach(() => {
+  consoleSpy.mockRestore();
+});
 
 describe('ErrorBoundary component', () => {
   test('renders children with no error', () => {
