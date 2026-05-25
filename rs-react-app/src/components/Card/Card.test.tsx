@@ -1,7 +1,9 @@
-import { render, screen } from '@testing-library/react';
+import { describe, test, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Card from './Card';
 import { Provider } from 'react-redux';
 import { store } from '../../store';
+import { selectItem } from '../../store/selectedItemsSlice';
 
 describe('Card component', () => {
   const mockItem = {
@@ -149,5 +151,87 @@ describe('Card component', () => {
     const species = screen.getByText('Alien');
 
     expect(species).toHaveClass('text-green-700');
+  });
+  test('calls onClick when card is clicked', () => {
+    const handleClick = vi.fn();
+
+    render(
+      <Provider store={store}>
+        <Card item={mockItem} onClick={handleClick} />
+      </Provider>
+    );
+
+    fireEvent.click(screen.getByText('Rick Sanchez'));
+
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+  test('selects item when checkbox is checked', () => {
+    render(
+      <Provider store={store}>
+        <Card item={mockItem} />
+      </Provider>
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+
+    fireEvent.click(checkbox);
+
+    expect(checkbox).toBeChecked();
+
+    const state = store.getState();
+
+    expect(state.selectedItems.items).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: '1',
+          name: 'Rick Sanchez',
+        }),
+      ])
+    );
+  });
+  test('unselects item when checkbox is unchecked', () => {
+    store.dispatch(
+      selectItem({
+        id: '1',
+        name: 'Rick Sanchez',
+        description: '',
+        detailsUrl: '',
+      })
+    );
+
+    render(
+      <Provider store={store}>
+        <Card item={mockItem} />
+      </Provider>
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+
+    expect(checkbox).toBeChecked();
+
+    fireEvent.click(checkbox);
+
+    expect(checkbox).not.toBeChecked();
+
+    const state = store.getState();
+
+    expect(state.selectedItems.items).not.toEqual(
+      expect.arrayContaining([expect.objectContaining({ id: '1' })])
+    );
+  });
+  test('checkbox click does not trigger card onClick', () => {
+    const handleClick = vi.fn();
+
+    render(
+      <Provider store={store}>
+        <Card item={mockItem} onClick={handleClick} />
+      </Provider>
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+
+    fireEvent.click(checkbox);
+
+    expect(handleClick).not.toHaveBeenCalled();
   });
 });
