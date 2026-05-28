@@ -6,6 +6,17 @@ export interface CardItem {
   image?: string;
   species?: string;
   status?: string;
-  location?: {name: string};
+  location?: { name: string };
   url?: string;
+}
+
+export interface CharactersResponse {
+  info: {
+    count: number;
+    pages: number;
+    next: string | null;
+    prev: string | null;
+  };
+
+  results: CardItem[];
 }
