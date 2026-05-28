@@ -8,7 +8,7 @@ interface ToolbarProps {
 
 export default function Toolbar({ selectedItems, clearSelectedItems, handleDownload }: ToolbarProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full flex flex-col items-center gap-2 text-lg p-4 bg-amber-100 dark:bg-gray-700 dark:text-white">
+    <div className="fixed bottom-0 left-0 right-0 w-full flex flex-col items-center gap-2 text-base p-4 bg-amber-100 dark:bg-gray-700 dark:text-white">
       <p>{`${selectedItems.length} items selected`}</p>
       <p>
         <button
