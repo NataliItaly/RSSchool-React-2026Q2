@@ -2,30 +2,32 @@ import React from 'react';
 import Search from '../Search/Search';
 import CardList from '../CardList/CardList';
 import BuggyButton from '../BuggyButton/BuggyButton';
-import { fetchCharacters } from '../../services/api';
-import type { Character } from '../../services/api';
 import { useSearchParams, Outlet } from 'react-router-dom';
 import Pagination from '../Pagination/Pagination';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { hydrateSelectedItems, unselectAll, type SelectedItem } from '../../store/selectedItemsSlice';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import Toolbar from '../Toolbar/Toolbar';
+import { useGetCharactersQuery } from '../../api/api';
 
-type PageState = {
+/* type PageState = {
   items: Character[];
   loading: boolean;
   error: string | null;
   hasNext: boolean;
-};
+}; */
 
 export default function Main() {
   const dispatch = useAppDispatch();
-  const selectedItems = useAppSelector(state => state.selectedItems.items);
-  const [storedSelectedItems, setStoredSelectedItems] = useLocalStorage<SelectedItem[]>('selectedItems', []);
+  const selectedItems = useAppSelector((state) => state.selectedItems.items);
+  const [storedSelectedItems, setStoredSelectedItems] = useLocalStorage<
+    SelectedItem[]
+  >('selectedItems', []);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page')) || 1;
-  const search = searchParams.get('search') ?? localStorage.getItem('search') ?? '';
+  const search =
+    searchParams.get('search') ?? localStorage.getItem('search') ?? '';
 
   React.useEffect(() => {
     dispatch(hydrateSelectedItems(storedSelectedItems));
@@ -54,9 +56,8 @@ export default function Main() {
 
     const headers = ['id', 'name', 'description', 'detailsUrl'];
 
-     const escapeCSV = (value: string | number) =>
-       `"${String(value).replace(/"/g, '""')}"`;
-
+    const escapeCSV = (value: string | number) =>
+      `"${String(value).replace(/"/g, '""')}"`;
 
     const rows = selectedItems.map((item) => [
       escapeCSV(item.id),
@@ -85,15 +86,20 @@ export default function Main() {
     URL.revokeObjectURL(url);
   }
 
-  const [pageState, setPageState] = React.useState<PageState>({
+  /* const [pageState, setPageState] = React.useState<PageState>({
     items: [],
     loading: false,
     error: null,
     hasNext: true,
-  });
+  }); */
 
   const detailsId = searchParams.get('details');
   const detailsOpen = !!detailsId;
+
+  const { data, error, isLoading, isFetching } = useGetCharactersQuery({
+    search,
+    page,
+  }); //, refetch
 
   function closeDetails() {
     const params = new URLSearchParams(searchParams);
@@ -101,10 +107,11 @@ export default function Main() {
     setSearchParams(params);
   }
 
+  //const { items, loading, error, hasNext } = pageState;
+  const items = data?.results ?? [];
+  const hasNext = data?.info?.next !== null;
 
-  const { items, loading, error, hasNext } = pageState;
-
-  React.useEffect(() => {
+  /* React.useEffect(() => {
     async function loadData() {
       setPageState((prev) => ({ ...prev, loading: true, error: null }));
 
@@ -129,7 +136,7 @@ export default function Main() {
     }
 
     loadData();
-  }, [search, page]);
+  }, [search, page]); */
 
   function handleSearch(value: string) {
     const trimmed = value.trim();
@@ -150,15 +157,16 @@ export default function Main() {
   }
 
   function nextPage() {
-    if (!pageState.hasNext || pageState.loading) return;
-
+    //if (!pageState.hasNext || pageState.loading) return;
+    if (!hasNext || isFetching) return;
     const params = new URLSearchParams(searchParams);
     params.set('page', String(page + 1));
     setSearchParams(params);
   }
 
   function prevPage() {
-    if (page === 1 || pageState.loading) return;
+    //if (page === 1 || pageState.loading) return;
+    if (page === 1 || isFetching) return;
 
     const params = new URLSearchParams(searchParams);
     params.set('page', String(page - 1));
@@ -173,11 +181,21 @@ export default function Main() {
       >
         <Search onSearch={handleSearch} />
 
-        {loading && <p className="text-center text-lg">Loading...</p>}
+        {/* {loading && <p className="text-center text-lg">Loading...</p>} */}
+
+        {isLoading && <p className="text-center text-lg">Loading...</p>}
+
+        {isFetching && !isLoading && (
+          <p className="text-center text-sm">Refreshing...</p>
+        )}
 
         <BuggyButton />
 
-        {error && <p className="text-red-700 text-center text-lg">{error}</p>}
+        {error && (
+          <p className="text-red-700 text-center text-lg">
+            Failed to load characters. Please try again.
+          </p>
+        )}
 
         <CardList items={items} />
 
