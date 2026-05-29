@@ -10,3 +10,12 @@ export interface CardItem {
   url?: string;
 }
 
+export type Character = {
+  id: number;
+  name: string;
+  status: string;
+  image: string;
+  species: string;
+  gender: string;
+  location?: {name: string};
+};

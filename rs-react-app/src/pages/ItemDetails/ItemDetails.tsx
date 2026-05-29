@@ -1,39 +1,29 @@
-import React from "react";
 import { useSearchParams } from "react-router-dom";
-import type { CardItem } from "../../types";
+import { useGetCharacterByIdQuery } from "../../api/api";
 
 export default function ItemDetails() {
   const [searchParams] = useSearchParams();
 
   const id = searchParams.get('details');
-  const [character, setCharacter] = React.useState<CardItem | null>(null);
-  const [loading, setLoading] = React.useState(false);
 
-  React.useEffect(() => {
-    if (!id) return;
-
-    async function load() {
-      setLoading(true);
-
-      const res = await fetch(
-        `https://rickandmortyapi.com/api/character/${id}`
-      );
-
-      const data = await res.json();
-
-      setCharacter(data);
-      setLoading(false);
-    }
-
-    load();
-  }, [id])
+  const {
+    data: character,
+    isLoading,
+    error,
+  } = useGetCharacterByIdQuery(Number(id), {
+    skip: !id,
+  });
 
   if (!id) {
     return null;
   }
 
-  if (loading) {
+  if (isLoading) {
     return <p>Loading details...</p>;
+  }
+
+  if (error) {
+    return <p className="text-red-700">Failed to load character details.</p>;
   }
 
   if (!character) {
@@ -47,7 +37,7 @@ export default function ItemDetails() {
         {character.name}
       </h2>
       <img
-        className="block mx-auto my-4 rounded-md"
+        className="block w-3xs aspect-square mx-auto my-4 rounded-md"
         src={character.image}
         alt={character.name}
       />

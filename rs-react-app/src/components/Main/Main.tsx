@@ -11,12 +11,6 @@ import Toolbar from '../Toolbar/Toolbar';
 import { useGetCharactersQuery } from '../../api/api';
 import Refresh from '../Refresh/Refresh';
 
-/* type PageState = {
-  items: Character[];
-  loading: boolean;
-  error: string | null;
-  hasNext: boolean;
-}; */
 
 export default function Main() {
   const dispatch = useAppDispatch();
@@ -87,13 +81,6 @@ export default function Main() {
     URL.revokeObjectURL(url);
   }
 
-  /* const [pageState, setPageState] = React.useState<PageState>({
-    items: [],
-    loading: false,
-    error: null,
-    hasNext: true,
-  }); */
-
   const detailsId = searchParams.get('details');
   const detailsOpen = !!detailsId;
 
@@ -110,36 +97,8 @@ export default function Main() {
     setSearchParams(params);
   }
 
-  //const { items, loading, error, hasNext } = pageState;
   const items = data?.results ?? [];
   const hasNext = data?.info?.next !== null;
-
-  /* React.useEffect(() => {
-    async function loadData() {
-      setPageState((prev) => ({ ...prev, loading: true, error: null }));
-
-      try {
-        const data = await fetchCharacters(search, page);
-
-        setPageState((prev) => ({
-          ...prev,
-          items: data.results,
-          hasNext: data.info?.next !== null,
-          loading: false,
-        }));
-      } catch (e: unknown) {
-        console.error(e);
-
-        setPageState((prev) => ({
-          ...prev,
-          error: 'Failed to load data',
-          loading: false,
-        }));
-      }
-    }
-
-    loadData();
-  }, [search, page]); */
 
   function handleSearch(value: string) {
     const trimmed = value.trim();
@@ -160,15 +119,12 @@ export default function Main() {
   }
 
   function nextPage() {
-    //if (!pageState.hasNext || pageState.loading) return;
-    if (!hasNext || isFetching) return;
     const params = new URLSearchParams(searchParams);
     params.set('page', String(page + 1));
     setSearchParams(params);
   }
 
   function prevPage() {
-    //if (page === 1 || pageState.loading) return;
     if (page === 1 || isFetching) return;
 
     const params = new URLSearchParams(searchParams);

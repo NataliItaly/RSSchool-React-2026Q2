@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { Character } from '../services/api';
+import type { Character } from '../types';
 
 const CACHE_TTL = Number(import.meta.env.VITE_CACHE_TTL) || 60;
 
