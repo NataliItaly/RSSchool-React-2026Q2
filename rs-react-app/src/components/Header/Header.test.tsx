@@ -1,15 +1,17 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import Header from './Header';
-import { ThemeProvider } from '../../context/ThemeProvider';
+//import { ThemeProvider } from '../../context/ThemeProvider';
 import { useTheme } from '../../context/useTheme';
+import { MemoryRouter } from 'react-router-dom';
 
 vi.mock('../../context/useTheme');
 const mockSetTheme = vi.fn();
+const mockUseTheme = vi.mocked(useTheme);
 
 beforeEach(() => {
   vi.clearAllMocks();
 
-  vi.mocked(useTheme).mockReturnValue({
+  mockUseTheme.mockReturnValue({
     theme: 'light',
     setTheme: mockSetTheme,
   });
@@ -18,34 +20,41 @@ beforeEach(() => {
 describe('Header component', () => {
   test('renders Header title', () => {
     render(
-      <ThemeProvider>
+      <MemoryRouter>
         <Header  />
-      </ThemeProvider>
+      </MemoryRouter>
     );
 
     expect(screen.getByText(/Rick and Morty App/i)).toBeInTheDocument();
   });
+
   test('renders Header component', () => {
     render(
-      <ThemeProvider>
+      <MemoryRouter>
         <Header />
-      </ThemeProvider>
+      </MemoryRouter>
     );
 
     expect(screen.getByRole('banner')).toBeInTheDocument();
   });
+
   test('renders Header component', () => {
     render(
-      <ThemeProvider>
+      <MemoryRouter>
         <Header />
-      </ThemeProvider>
+      </MemoryRouter>
     );
 
     const heading = screen.getByRole('heading', { level: 2 });
     expect(heading).toHaveTextContent('Rick and Morty App');
   });
+
   test('renders theme select with current theme', () => {
-    render(<Header />);
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
 
     const select = screen.getByRole('combobox');
 
@@ -53,7 +62,11 @@ describe('Header component', () => {
     expect(select).toHaveValue('light');
   });
   test('calls setTheme when theme changes', () => {
-    render(<Header />);
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
 
     const select = screen.getByRole('combobox');
 
