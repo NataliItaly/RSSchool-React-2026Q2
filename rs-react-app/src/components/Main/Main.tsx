@@ -174,7 +174,7 @@ export default function Main() {
   }
 
   return (
-    <main className="flex gap-4 dark:bg-gray-900 dark:text-white">
+    <main className="flex gap-4 pb-24 dark:bg-gray-900 dark:text-white">
       <div
         className={`transition-all p-5 ${detailsOpen ? 'w-1/2' : 'w-full'}`}
         onClick={() => detailsOpen && closeDetails()}
