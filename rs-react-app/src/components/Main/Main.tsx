@@ -9,6 +9,7 @@ import { hydrateSelectedItems, unselectAll, type SelectedItem } from '../../stor
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import Toolbar from '../Toolbar/Toolbar';
 import { useGetCharactersQuery } from '../../api/api';
+import Refresh from '../Refresh/Refresh';
 
 /* type PageState = {
   items: Character[];
@@ -96,10 +97,12 @@ export default function Main() {
   const detailsId = searchParams.get('details');
   const detailsOpen = !!detailsId;
 
-  const { data, error, isLoading, isFetching } = useGetCharactersQuery({
-    search,
-    page,
-  }); //, refetch
+  const { data, error, isLoading, isFetching, refetch } = useGetCharactersQuery(
+    {
+      search,
+      page,
+    }
+  );
 
   function closeDetails() {
     const params = new URLSearchParams(searchParams);
@@ -180,6 +183,8 @@ export default function Main() {
         onClick={() => detailsOpen && closeDetails()}
       >
         <Search onSearch={handleSearch} />
+
+        <Refresh refetch={refetch} disabled={isFetching} />
 
         {/* {loading && <p className="text-center text-lg">Loading...</p>} */}
 
