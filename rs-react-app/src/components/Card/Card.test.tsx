@@ -12,6 +12,10 @@ describe('Card component', () => {
     image: 'https://example.com/rick.png',
     gender: 'Male',
     species: 'Human',
+    description: '',
+    status: 'alive',
+    location: { name: 'Earth' },
+    url: ''
   };
 
   test('renders character name', () => {

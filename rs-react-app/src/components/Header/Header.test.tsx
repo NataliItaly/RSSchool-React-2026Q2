@@ -1,8 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Header from './Header';
 import { ThemeProvider } from '../../context/ThemeProvider';
 import { useTheme } from '../../context/useTheme';
-import { fireEvent } from '@testing-library/react';
 
 vi.mock('../../context/useTheme');
 const mockSetTheme = vi.fn();
