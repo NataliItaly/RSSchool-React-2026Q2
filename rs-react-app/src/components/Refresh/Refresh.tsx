@@ -8,7 +8,7 @@ export default function Refresh({refetch, disabled = false}: RefreshProps) {
     <button
       onClick={() => refetch()}
       disabled={disabled}
-      className="px-3 py-2 rounded bg-indigo-600 text-white"
+      className="py-2 px-8 rounded-md bg-green-800 text-white hover:bg-green-600 cursor-pointer transition-all duration-600"
     >
       Refresh
     </button>

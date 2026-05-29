@@ -182,9 +182,10 @@ export default function Main() {
         className={`transition-all p-5 ${detailsOpen ? 'w-1/2' : 'w-full'}`}
         onClick={() => detailsOpen && closeDetails()}
       >
-        <Search onSearch={handleSearch} />
-
-        <Refresh refetch={refetch} disabled={isFetching} />
+        <div className='flex justify-center items-center gap-5'>
+          <Search onSearch={handleSearch} />
+          <Refresh refetch={refetch} disabled={isFetching} />
+        </div>
 
         {/* {loading && <p className="text-center text-lg">Loading...</p>} */}
 
