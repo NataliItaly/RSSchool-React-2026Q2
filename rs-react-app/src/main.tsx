@@ -7,7 +7,9 @@ import { Provider } from 'react-redux'
 import { ThemeProvider } from './context/ThemeProvider.tsx'
 import { router } from './app/router.tsx'
 import { store } from './store/index.ts'
+import { setupListeners } from '@reduxjs/toolkit/query'
 
+setupListeners(store.dispatch);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

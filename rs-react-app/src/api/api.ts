@@ -1,7 +1,23 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { CharactersResponse } from '../types';
+import type { Character } from '../services/api';
 
 const CACHE_TTL = Number(import.meta.env.VITE_CACHE_TTL) || 60;
+
+export interface CharactersResponse {
+  info: {
+    count: number;
+    pages: number;
+    next: string | null;
+    prev: string | null;
+  };
+
+  results: Character[];
+}
+
+type CharactersQueryParams = {
+  search?: string;
+  page?: number;
+};
 
 export const api = createApi({
   reducerPath: 'api',
@@ -13,18 +29,33 @@ export const api = createApi({
   tagTypes: ['Character'],
 
   endpoints: (builder) => ({
-    getCharacters: builder.query({
-      query: (page = 1) => `character?page=${page}`,
+    getCharacters: builder.query<CharactersResponse, CharactersQueryParams>({
+      query: ({ search = '', page = 1 }) => ({
+        url: 'character',
+        params: {
+          name: search,
+          page,
+        },
+      }),
 
-      providesTags: ['Character'],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.results.map(({ id }) => ({
+                type: 'Character' as const,
+                id,
+              })),
+              { type: 'Character', id: 'LIST' },
+            ]
+          : [{ type: 'Character', id: 'LIST' }],
 
       keepUnusedDataFor: CACHE_TTL,
     }),
 
-    getCharacterById: builder.query<CharactersResponse, number>({
+    getCharacterById: builder.query<Character, number>({
       query: (id: number) => `character/${id}`,
 
-      providesTags: ['Character'],
+      providesTags: (_result, _error, id) => [{ type: 'Character', id }],
 
       keepUnusedDataFor: CACHE_TTL,
     }),
