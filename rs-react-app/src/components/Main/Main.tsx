@@ -10,6 +10,7 @@ import { useLocalStorage } from '../../hooks/useLocalStorage';
 import Toolbar from '../Toolbar/Toolbar';
 import { useGetCharactersQuery } from '../../api/api';
 import Refresh from '../Refresh/Refresh';
+import { api } from '../../api/api';
 
 
 export default function Main() {
@@ -84,7 +85,7 @@ export default function Main() {
   const detailsId = searchParams.get('details');
   const detailsOpen = !!detailsId;
 
-  const { data, error, isLoading, isFetching, refetch } = useGetCharactersQuery(
+  const { data, error, isLoading, isFetching } = useGetCharactersQuery(
     {
       search,
       page,
@@ -132,6 +133,10 @@ export default function Main() {
     setSearchParams(params);
   }
 
+  function handleRefresh() {
+    dispatch(api.util.invalidateTags([{ type: 'Character', id: 'LIST' }]));
+  }
+
   return (
     <main className="flex gap-4 pb-24 dark:bg-gray-900 dark:text-white">
       <div
@@ -140,7 +145,7 @@ export default function Main() {
       >
         <div className='flex justify-center items-center gap-5'>
           <Search onSearch={handleSearch} />
-          <Refresh refetch={refetch} disabled={isFetching} />
+          <Refresh onRefresh={handleRefresh} disabled={isFetching} />
         </div>
 
         {/* {loading && <p className="text-center text-lg">Loading...</p>} */}

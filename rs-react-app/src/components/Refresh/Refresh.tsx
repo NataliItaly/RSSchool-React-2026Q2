@@ -1,12 +1,12 @@
 type RefreshProps = Readonly<{
-  refetch: () => Promise<unknown>;
+  onRefresh: () => void;
   disabled?: boolean;
 }>
 
-export default function Refresh({refetch, disabled = false}: RefreshProps) {
+export default function Refresh({onRefresh, disabled = false}: RefreshProps) {
   return (
     <button
-      onClick={() => refetch()}
+      onClick={onRefresh}
       disabled={disabled}
       className="py-2 px-8 rounded-md bg-green-800 text-white hover:bg-green-600 cursor-pointer transition-all duration-600"
     >
