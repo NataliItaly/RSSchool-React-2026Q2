@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { Character } from '../types';
+import type { CardItem } from '../types';
 
 const CACHE_TTL = Number(import.meta.env.VITE_CACHE_TTL) || 60;
 
@@ -11,7 +11,7 @@ export interface CharactersResponse {
     prev: string | null;
   };
 
-  results: Character[];
+  results: CardItem[];
 }
 
 type CharactersQueryParams = {
@@ -52,7 +52,7 @@ export const api = createApi({
       keepUnusedDataFor: CACHE_TTL,
     }),
 
-    getCharacterById: builder.query<Character, number>({
+    getCharacterById: builder.query<CardItem, number>({
       query: (id: number) => `character/${id}`,
 
       providesTags: (_result, _error, id) => [{ type: 'Character', id }],

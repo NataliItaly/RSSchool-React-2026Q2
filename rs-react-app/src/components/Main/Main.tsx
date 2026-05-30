@@ -8,9 +8,8 @@ import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { hydrateSelectedItems, unselectAll, type SelectedItem } from '../../store/selectedItemsSlice';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import Toolbar from '../Toolbar/Toolbar';
-import { useGetCharactersQuery } from '../../api/api';
+import { useGetCharactersQuery, api } from '../../api/api';
 import Refresh from '../Refresh/Refresh';
-import { api } from '../../api/api';
 
 
 export default function Main() {

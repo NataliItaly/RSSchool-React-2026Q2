@@ -3,9 +3,10 @@ import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import Main from './Main';
 import { MemoryRouter } from 'react-router-dom';
-import * as api from '../../services/api';
 import { Provider } from 'react-redux';
 import { store } from '../../store';
+import * as api from '../../api/api';
+
 
 const mockUseSearchParams = vi.fn();
 
@@ -18,8 +19,21 @@ vi.mock('react-router-dom', async () => {
   return {
     ...actual,
     useSearchParams: () => mockUseSearchParams(),
+    Outlet: () => <div>Outlet</div>,
   };
 });
+
+vi.mock('../../api/api', async () => {
+  const actual =
+    await vi.importActual<typeof import('../../api/api')>(
+      '../../api/api'
+    );
+  return {
+    ...actual,
+    useGetCharactersQuery: vi.fn(),
+  };
+});
+
 
 describe('Main closeDetails', () => {
   afterEach(() => {
@@ -36,10 +50,19 @@ describe('Main closeDetails', () => {
       mockSetSearchParams,
     ]);
 
-    vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
-      results: [],
-      info: { next: null },
-    });
+    vi.mocked(api.useGetCharactersQuery).mockReturnValue({
+      data: {
+        results: [],
+        info: { next: null },
+      },
+      error: undefined,
+      isLoading: false,
+      isFetching: false,
+      isSuccess: true,
+      refetch: vi.fn(),
+    } as Partial<ReturnType<typeof api.useGetCharactersQuery>> as ReturnType<
+      typeof api.useGetCharactersQuery
+    >);
 
     render(
       <Provider store={store}>
