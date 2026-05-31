@@ -4,61 +4,8 @@ import { mockUseGetCharactersQuery, createQueryResult } from './apiMocks';
 import Main from './Main';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-//import type { CardItem } from '../../types';
-/* import selectedItemsReducer from '../../store/selectedItemsSlice';
-import { configureStore } from '@reduxjs/toolkit';
-import { api } from '../../api/api'; */
 import { createTestStore } from './testStore';
 import { page1Characters, page2Characters } from '../../types';
-
-/* const createTestStore = () =>
-  configureStore({
-    reducer: {
-      selectedItems: selectedItemsReducer,
-      [api.reducerPath]: api.reducer,
-    },
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(api.middleware),
-  }); */
-/*
-vi.mock('../../api/api', () => ({
-  useGetCharactersQuery: vi.fn(),
-  api: {
-    reducerPath: 'api',
-    reducer: (state = {}) => state,
-    middleware:
-      () => (next: (action: unknown) => unknown) => (action: unknown) =>
-        next(action),
-    util: {
-      invalidateTags: vi.fn(() => ({
-        type: 'invalidateTags',
-      })),
-    },
-  },
-}));
-
-const mockUseGetCharactersQuery = vi.mocked(useGetCharactersQuery);
-
-type QueryResult = ReturnType<typeof useGetCharactersQuery>;
-
-function createQueryResult(overrides: Partial<QueryResult>): QueryResult {
-  return {
-    data: undefined,
-    error: undefined,
-    isLoading: false,
-    isFetching: false,
-    isSuccess: false,
-    isError: false,
-    isUninitialized: false,
-    refetch: vi.fn(),
-    fulfilledTimeStamp: 0,
-    requestId: 'test-request',
-    startedTimeStamp: 0,
-    status: 'uninitialized',
-    ...overrides,
-  } as QueryResult;
-} */
-
 
 
 const errorMessage = 'Failed to load characters';

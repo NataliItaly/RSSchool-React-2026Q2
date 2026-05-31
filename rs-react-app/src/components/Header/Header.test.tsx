@@ -1,6 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import Header from './Header';
-//import { ThemeProvider } from '../../context/ThemeProvider';
 import { useTheme } from '../../context/useTheme';
 import { MemoryRouter } from 'react-router-dom';
 
