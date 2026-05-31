@@ -177,8 +177,13 @@ describe('Main component', () => {
   });
 
   test('loads next page when Next button is clicked', async () => {
-    mockUseGetCharactersQuery.mockImplementation(({ page }) =>
-      createQueryResult({
+    mockUseGetCharactersQuery.mockImplementation((args) => {
+      const page =
+        typeof args === 'object' && args !== null && 'page' in args
+          ? args.page
+          : 1;
+
+      return createQueryResult({
         data:
           page === 2
             ? {
@@ -191,8 +196,8 @@ describe('Main component', () => {
               },
         isSuccess: true,
         status: 'fulfilled',
-      })
-    );
+      });
+    });
 
     render(
       <Provider store={createTestStore()}>
@@ -371,37 +376,31 @@ describe('Main component', () => {
     expect(setItemSpy).toHaveBeenCalledWith('search', JSON.stringify('Rick'));
   });
 
-  /* test('uses empty string when localStorage search is null', async () => {
-    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(null);
+  test('handles pagination back and forth', async () => {
+    mockUseGetCharactersQuery.mockImplementation((args) => {
+      const page = typeof args === 'object' && args !== null && 'page' in args
+      ? args.page
+      : 1;
 
-    const fetchSpy = vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
-      results: page1Characters,
-      info: { next: null },
+      return createQueryResult({
+        data:
+        page === 2
+        ? {
+          results: page2Characters,
+          info: { next: null },
+        }
+        : {
+          results: page1Characters,
+          info: { next: 2 },
+        },
+        isSuccess: true,
+        status: 'fulfilled',
+      });
     });
 
     render(
-      <Provider  store={createTestStore()}>
-        <MemoryRouter>
-          <Main />
-        </MemoryRouter>
-      </Provider>
-    );
-
-    await screen.findByText(/Rick/i);
-
-    expect(fetchSpy).toHaveBeenCalledWith('', 1);
-  }); */
-  /*
-  test('handles pagination back and forth', async () => {
-    const fetchSpy = vi
-      .spyOn(api, 'fetchCharacters')
-      .mockResolvedValueOnce({ results: page1Characters, info: { next: 2 } })
-      .mockResolvedValueOnce({ results: page2Characters, info: { next: null } })
-      .mockResolvedValueOnce({ results: page1Characters, info: { next: 2 } }); // going back
-
-    render(
-      <Provider  store={createTestStore()}>
-        <MemoryRouter>
+      <Provider store={createTestStore()}>
+        <MemoryRouter initialEntries={['/?page=1']}>
           <Main />
         </MemoryRouter>
       </Provider>
@@ -417,19 +416,22 @@ describe('Main component', () => {
     // Prev page
     fireEvent.click(screen.getByRole('button', { name: /prev/i }));
     expect(await screen.findByText(/Rick/i)).toBeInTheDocument();
+  });
 
-    expect(fetchSpy).toHaveBeenCalledTimes(3);
-  }); */
-
-  /* test('does not go below page 1', async () => {
-    const fetchSpy = vi.spyOn(api, 'fetchCharacters').mockResolvedValue({
-      results: page1Characters,
-      info: { next: 2 },
-    });
+  test('does not go below page 1', async () => {
+    mockUseGetCharactersQuery.mockReturnValue(
+      createQueryResult({
+        data: {
+          results: page1Characters,
+          info: { next: 2 },
+        },
+        isSuccess: true,
+      })
+    );
 
     render(
-      <Provider  store={createTestStore()}>
-        <MemoryRouter>
+      <Provider store={createTestStore()}>
+        <MemoryRouter initialEntries={['/?page=1']}>
           <Main />
         </MemoryRouter>
       </Provider>
@@ -439,9 +441,13 @@ describe('Main component', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /prev/i }));
 
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(screen.getByRole('button', { name: /prev/i })).toBeDisabled();
-  }); */
+
+    expect(mockUseGetCharactersQuery).toHaveBeenCalledWith({
+      search: '',
+      page: 1,
+    });
+  });
 
   test('handles missing info object', async () => {
     mockUseGetCharactersQuery.mockReturnValue(
@@ -469,20 +475,6 @@ describe('Main component', () => {
 
     expect(nextButton).toBeEnabled();
   });
-
-  /*  test('handles non-Error rejection', async () => {
-    vi.spyOn(api, 'fetchCharacters').mockRejectedValue('oops');
-
-    render(
-      <Provider  store={createTestStore()}>
-        <MemoryRouter>
-          <Main />
-        </MemoryRouter>
-      </Provider>
-    );
-
-    expect(await screen.findByText(/Failed to load data/i)).toBeInTheDocument();
-  }); */
 
   test('shows loading state while fetching', () => {
     mockUseGetCharactersQuery.mockReturnValue(
