@@ -1,15 +1,17 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
-import { useGetCharactersQuery } from '../../api/api';
+import { mockUseGetCharactersQuery, createQueryResult } from './apiMocks';
 import Main from './Main';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import type { CardItem } from '../../types';
-import selectedItemsReducer from '../../store/selectedItemsSlice';
+//import type { CardItem } from '../../types';
+/* import selectedItemsReducer from '../../store/selectedItemsSlice';
 import { configureStore } from '@reduxjs/toolkit';
-import { api } from '../../api/api';
+import { api } from '../../api/api'; */
+import { createTestStore } from './testStore';
+import { page1Characters, page2Characters } from '../../types';
 
-const createTestStore = () =>
+/* const createTestStore = () =>
   configureStore({
     reducer: {
       selectedItems: selectedItemsReducer,
@@ -17,8 +19,8 @@ const createTestStore = () =>
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(api.middleware),
-  });
-
+  }); */
+/*
 vi.mock('../../api/api', () => ({
   useGetCharactersQuery: vi.fn(),
   api: {
@@ -55,47 +57,9 @@ function createQueryResult(overrides: Partial<QueryResult>): QueryResult {
     status: 'uninitialized',
     ...overrides,
   } as QueryResult;
-}
+} */
 
-// Mock character data
-const page1Characters: CardItem[] = [
-  {
-    id: 1,
-    name: 'Rick',
-    gender: 'Male',
-    species: 'Human',
-    status: 'Alive',
-    image: '',
-    description: '',
-    location: { name: 'Earth' },
-    url: '',
-  },
-  {
-    id: 2,
-    name: 'Morty',
-    gender: 'Male',
-    species: 'Human',
-    status: 'Alive',
-    image: '',
-    description: '',
-    location: { name: 'Earth' },
-    url: '',
-  },
-];
 
-const page2Characters: CardItem[] = [
-  {
-    id: 3,
-    name: 'Summer',
-    gender: 'Female',
-    species: 'Human',
-    status: 'Alive',
-    image: '',
-    description: '',
-    location: { name: 'Earth' },
-    url: '',
-  },
-];
 
 const errorMessage = 'Failed to load characters';
 

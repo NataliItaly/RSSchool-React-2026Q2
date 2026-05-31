@@ -147,8 +147,6 @@ export default function Main() {
           <Refresh onRefresh={handleRefresh} disabled={isFetching} />
         </div>
 
-        {/* {loading && <p className="text-center text-lg">Loading...</p>} */}
-
         {isLoading && <p className="text-center text-lg">Loading...</p>}
 
         {isFetching && !isLoading && (
