@@ -21,9 +21,7 @@ beforeEach(() => {
 test('main.tsx renders App using createRoot', async () => {
   await import('./main.tsx');
 
-  const { createRoot } = (await import('react-dom/client')) as {
-    createRoot: vi.Mock;
-  };
+  const { createRoot } = await import('react-dom/client');
 
   expect(createRoot).toHaveBeenCalledWith(expect.any(HTMLElement));
 
