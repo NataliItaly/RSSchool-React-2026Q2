@@ -5,12 +5,15 @@ import BuggyButton from '../BuggyButton/BuggyButton';
 import { useSearchParams, Outlet } from 'react-router-dom';
 import Pagination from '../Pagination/Pagination';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
-import { hydrateSelectedItems, unselectAll, type SelectedItem } from '../../store/selectedItemsSlice';
+import {
+  hydrateSelectedItems,
+  unselectAll,
+  type SelectedItem,
+} from '../../store/selectedItemsSlice';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import Toolbar from '../Toolbar/Toolbar';
 import { useGetCharactersQuery, api } from '../../api/api';
 import Refresh from '../Refresh/Refresh';
-
 
 export default function Main() {
   const dispatch = useAppDispatch();
@@ -22,7 +25,8 @@ export default function Main() {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page')) || 1;
   const search =
-    searchParams.get('search') ?? localStorage.getItem('search') ?? '';
+    searchParams.get('search') ??
+    JSON.parse(localStorage.getItem('search') ?? '""');
 
   React.useEffect(() => {
     dispatch(hydrateSelectedItems(storedSelectedItems));
@@ -84,12 +88,10 @@ export default function Main() {
   const detailsId = searchParams.get('details');
   const detailsOpen = !!detailsId;
 
-  const { data, error, isLoading, isFetching } = useGetCharactersQuery(
-    {
-      search,
-      page,
-    }
-  );
+  const { data, error, isLoading, isFetching } = useGetCharactersQuery({
+    search,
+    page,
+  });
 
   function closeDetails() {
     const params = new URLSearchParams(searchParams);
@@ -142,7 +144,7 @@ export default function Main() {
         className={`transition-all p-5 ${detailsOpen ? 'w-1/2' : 'w-full'}`}
         onClick={() => detailsOpen && closeDetails()}
       >
-        <div className='flex justify-center items-center gap-5'>
+        <div className="flex justify-center items-center gap-5">
           <Search onSearch={handleSearch} />
           <Refresh onRefresh={handleRefresh} disabled={isFetching} />
         </div>
