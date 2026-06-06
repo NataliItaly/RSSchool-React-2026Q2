@@ -7,7 +7,6 @@ import { Provider } from 'react-redux';
 import { createTestStore } from './testStore';
 import { page1Characters, page2Characters } from '../../types';
 
-
 const errorMessage = 'Failed to load characters';
 
 let consoleSpy: ReturnType<typeof vi.spyOn>;
@@ -17,7 +16,6 @@ describe('Main component', () => {
     // silence expected React/API errors
     consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    // localStorage mocks
     vi.spyOn(Storage.prototype, 'getItem').mockImplementation((key) => {
       if (key === 'selectedItems') {
         return JSON.stringify([]);
@@ -289,21 +287,22 @@ describe('Main component', () => {
 
   test('handles pagination back and forth', async () => {
     mockUseGetCharactersQuery.mockImplementation((args) => {
-      const page = typeof args === 'object' && args !== null && 'page' in args
-      ? args.page
-      : 1;
+      const page =
+        typeof args === 'object' && args !== null && 'page' in args
+          ? args.page
+          : 1;
 
       return createQueryResult({
         data:
-        page === 2
-        ? {
-          results: page2Characters,
-          info: { next: null },
-        }
-        : {
-          results: page1Characters,
-          info: { next: 2 },
-        },
+          page === 2
+            ? {
+                results: page2Characters,
+                info: { next: null },
+              }
+            : {
+                results: page1Characters,
+                info: { next: 2 },
+              },
         isSuccess: true,
         status: 'fulfilled',
       });
