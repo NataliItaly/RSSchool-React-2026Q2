@@ -23,6 +23,9 @@ describe('CardList component', () => {
       image: 'https://example.com/rick.png',
       gender: 'Male',
       species: 'Human',
+      status: 'Alive',
+      location: { name: 'Earth' },
+      url: '',
     },
   ];
   test('renders list of cards', () => {
@@ -49,8 +52,26 @@ describe('CardList component', () => {
   });
   test('renders multiple cards', () => {
     const items = [
-      { id: 1, name: 'Rick', image: '', gender: 'Male', species: 'Human' },
-      { id: 2, name: 'Morty', image: '', gender: 'Male', species: 'Human' },
+      {
+        id: 1,
+        name: 'Rick',
+        image: '',
+        gender: 'Male',
+        species: 'Human',
+        status: 'Alive',
+        location: { name: 'Earth' },
+        url: '',
+      },
+      {
+        id: 2,
+        name: 'Morty',
+        image: '',
+        gender: 'Male',
+        species: 'Human',
+        status: 'Alive',
+        location: { name: 'Earth' },
+        url: '',
+      },
     ];
 
     render(
