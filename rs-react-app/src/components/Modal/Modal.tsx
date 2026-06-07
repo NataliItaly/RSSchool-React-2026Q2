@@ -1,12 +1,13 @@
 import { createPortal } from 'react-dom';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 type ModalProps = {
   isOpen: boolean;
   handleClose: () => void;
+  children: React.ReactNode;
 };
 
-export default function Modal({ isOpen, handleClose }: ModalProps) {
+export default function Modal({ isOpen, handleClose, children }: ModalProps) {
   if (!isOpen) return null;
 
   const previousFocus = useRef<HTMLElement | null>(null);
@@ -35,9 +36,9 @@ export default function Modal({ isOpen, handleClose }: ModalProps) {
   }, [handleClose]);
 
   return createPortal(
-    <div className="overlay fixed top-0 left-0 right-0 w-full h-dvh flex justify-center items-center bg-[rgba(0, 0, 0, 0.8)]">
+    <div className="overlay fixed top-0 left-0 right-0 w-full h-dvh flex justify-center items-center bg-[#000000a0]">
       <div
-        className="modal relative p-5 bg-white rounded-md"
+        className="modal relative p-5 bg-white rounded-md min-w-3xs"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -51,6 +52,7 @@ export default function Modal({ isOpen, handleClose }: ModalProps) {
         >
           x
         </button>
+        {children}
       </div>
     </div>,
     document.body
