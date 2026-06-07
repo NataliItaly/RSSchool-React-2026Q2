@@ -1,0 +1,58 @@
+import { createPortal } from 'react-dom';
+import { useEffect, useRef } from 'react';
+
+type ModalProps = {
+  isOpen: boolean;
+  handleClose: () => void;
+};
+
+export default function Modal({ isOpen, handleClose }: ModalProps) {
+  if (!isOpen) return null;
+
+  const previousFocus = useRef<HTMLElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      previousFocus.current = document.activeElement as HTMLElement;
+      closeButtonRef.current?.focus();
+    }
+    return () => {
+      previousFocus.current?.focus();
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleClose]);
+
+  return createPortal(
+    <div className="overlay fixed top-0 left-0 right-0 w-full h-dvh flex justify-center items-center bg-[rgba(0, 0, 0, 0.8)]">
+      <div
+        className="modal relative p-5 bg-white rounded-md"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <h2 id="modal-title">Create User</h2>
+        <button
+          ref={closeButtonRef}
+          className="absolute top-0 right-1 text-lg leading-none p-1 cursor-pointer"
+          onClick={handleClose}
+        >
+          x
+        </button>
+      </div>
+    </div>,
+    document.body
+  );
+}
