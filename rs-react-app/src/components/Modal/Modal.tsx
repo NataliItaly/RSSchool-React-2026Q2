@@ -36,7 +36,7 @@ export default function Modal({ isOpen, handleClose, children }: ModalProps) {
   }, [handleClose]);
 
   return createPortal(
-    <div className="overlay fixed top-0 left-0 right-0 w-full h-dvh flex justify-center items-center bg-[#000000a0]">
+    <div className="overlay fixed top-0 left-0 right-0 w-full min-h-dvh flex justify-center items-center bg-[#000000a0]">
       <div
         className="modal relative p-5 bg-white rounded-md min-w-3xs"
         onClick={(e) => e.stopPropagation()}
@@ -44,10 +44,15 @@ export default function Modal({ isOpen, handleClose, children }: ModalProps) {
         aria-modal="true"
         aria-labelledby="modal-title"
       >
-        <h2 id="modal-title">Create User</h2>
+        <h2
+          className="text-indigo-800 text-2xl font-bold text-center mb-4"
+          id="modal-title"
+        >
+          Create User
+        </h2>
         <button
           ref={closeButtonRef}
-          className="absolute top-0 right-1 text-lg leading-none p-1 cursor-pointer"
+          className="absolute top-0 right-1 text-2xl text-indigo-800 font-bold hover:text-indigo-600 transition-all duration-300 leading-none p-1 cursor-pointer"
           onClick={handleClose}
         >
           x
