@@ -1,6 +1,8 @@
 import { buttonStyles } from '../../constants/constants';
 import type { UserFormData } from './form-type';
 import { useRef } from 'react';
+import { addSubmission } from '../../store/userSlice';
+import { useDispatch } from 'react-redux';
 
 type UncontrolledFormProps = {
   onSuccess: () => void;
@@ -8,6 +10,7 @@ type UncontrolledFormProps = {
 
 export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
   const formRef = useRef<HTMLFormElement | null>(null);
+  const dispatch = useDispatch();
 
   function convertToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -52,6 +55,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
     const imageBase64 = await convertToBase64(image);
 
     const data: UserFormData = {
+      id: crypto.randomUUID(),
       name: String(formData.get('name') ?? ''),
       age: Number(formData.get('age') ?? 0),
       email: String(formData.get('email') ?? ''),
@@ -64,6 +68,12 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
     };
 
     console.log(data);
+
+    dispatch(
+      addSubmission({
+        ...data,
+      })
+    );
 
     formRef.current?.reset();
 
