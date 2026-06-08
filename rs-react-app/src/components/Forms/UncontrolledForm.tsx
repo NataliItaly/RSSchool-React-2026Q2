@@ -2,7 +2,7 @@ import { buttonStyles } from '../../constants/constants';
 import type { UserFormData } from './form-type';
 import { useRef } from 'react';
 import { addSubmission } from '../../store/userSlice';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../hooks/reduxHooks';
 
 type UncontrolledFormProps = {
   onSuccess: () => void;
@@ -10,7 +10,7 @@ type UncontrolledFormProps = {
 
 export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
   const formRef = useRef<HTMLFormElement | null>(null);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   function convertToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -209,7 +209,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
         <input
           id="country"
           className="border border-gray-400 rounded-md px-3 py-1 flex-auto"
-          list="country"
+          list="countries"
           name="country"
         />
         <datalist id="countries">
