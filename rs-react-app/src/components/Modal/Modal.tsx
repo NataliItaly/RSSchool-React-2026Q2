@@ -8,8 +8,6 @@ type ModalProps = {
 };
 
 export default function Modal({ isOpen, handleClose, children }: ModalProps) {
-  if (!isOpen) return null;
-
   const previousFocus = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -34,6 +32,8 @@ export default function Modal({ isOpen, handleClose, children }: ModalProps) {
 
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleClose]);
+
+  if (!isOpen) return null;
 
   return createPortal(
     <div className="overlay fixed top-0 left-0 right-0 w-full min-h-dvh flex justify-center items-center bg-[#000000a0]">

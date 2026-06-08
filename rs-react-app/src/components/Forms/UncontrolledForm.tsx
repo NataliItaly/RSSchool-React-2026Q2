@@ -1,31 +1,62 @@
 import { buttonStyles } from '../../constants/constants';
-import type { FormData } from './form-type';
+import type { UserFormData } from './form-type';
 import { useRef } from 'react';
 
 export default function UncontrolledForm() {
-  /*  const nameRef = useRef<HTMLInputElement | null>(null);
-  const ageRef = useRef<HTMLInputElement | null>(null);
-  const emailRef = useRef<HTMLInputElement | null>(null);
-  const genderRef = useRef<HTMLSelectElement | null>(null);
-  const termsRef = useRef<HTMLInputElement | null>(null);
-  const passwordRef = useRef<HTMLInputElement | null>(null);
-  const confPasswordRef = useRef<HTMLInputElement | null>(null); */
   const formRef = useRef<HTMLFormElement | null>(null);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function convertToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+
+      reader.onerror = reject;
+
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
 
-    const data = {
-      name: formData.get('name'),
-      age: formData.get('age'),
-      email: formData.get('email'),
-      gender: formData.get('gender'),
-      terms: formData.get('terms'),
-      password: formData.get('password'),
-      confirmPassword: formData.get('confirmPassword'),
-      country: formData.get('country'),
+    const image = formData.get('image');
+
+    if (!(image instanceof File) || image.size === 0) {
+      alert('Please select an image');
+      return;
+    }
+
+    const allowedTypes = ['image/png', 'image/jpeg'];
+
+    if (!allowedTypes.includes(image.type)) {
+      alert('Only PNG and JPEG images are allowed');
+      return;
+    }
+
+    const MAX_SIZE = 2 * 1024 * 1024; // 2 MB
+
+    if (image.size > MAX_SIZE) {
+      alert('Image size must be less than 2 MB');
+      return;
+    }
+
+    const imageBase64 = await convertToBase64(image);
+
+    const data: UserFormData = {
+      name: String(formData.get('name') ?? ''),
+      age: Number(formData.get('age') ?? 0),
+      email: String(formData.get('email') ?? ''),
+      gender: String(formData.get('gender') ?? ''),
+      termsAccepted: formData.get('terms') !== null,
+      password: String(formData.get('password') ?? ''),
+      confirmPassword: String(formData.get('confirmPassword') ?? ''),
+      country: String(formData.get('country') ?? ''),
+      imageBase64,
     };
 
     console.log(data);
@@ -158,11 +189,12 @@ export default function UncontrolledForm() {
           Choose Country
         </label>
         <input
+          id="country"
           className="border border-gray-400 rounded-md px-3 py-1 flex-auto"
           list="country"
           name="country"
         />
-        <datalist id="country">
+        <datalist id="countries">
           <option value="USA">USA</option>
           <option value="France">France</option>
           <option value="Italy">Italy</option>
