@@ -8,14 +8,6 @@ export default function App() {
   //const [isOpen, setIsOpen] = useState(false);
   const [formType, setFormType] = useState<'uncontrolled' | 'rhf' | null>(null);
 
-  /* function handleOpen() {
-    setIsOpen(true);
-  }
-
-  function handleClose() {
-    setIsOpen(false);
-  } */
-
   return (
     <div className="h-dvh flex justify-center items-center gap-5">
       <button
@@ -31,7 +23,11 @@ export default function App() {
         Open React Hook Form
       </button>
       <Modal isOpen={formType !== null} handleClose={() => setFormType(null)}>
-        {formType === 'uncontrolled' ? <UncontrolledForm /> : <ReactHookForm />}
+        {formType === 'uncontrolled' ? (
+          <UncontrolledForm onSuccess={() => setFormType(null)} />
+        ) : (
+          <ReactHookForm />
+        )}
       </Modal>
     </div>
   );

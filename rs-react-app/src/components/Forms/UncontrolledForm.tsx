@@ -2,7 +2,11 @@ import { buttonStyles } from '../../constants/constants';
 import type { UserFormData } from './form-type';
 import { useRef } from 'react';
 
-export default function UncontrolledForm() {
+type UncontrolledFormProps = {
+  onSuccess: () => void;
+};
+
+export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
   const formRef = useRef<HTMLFormElement | null>(null);
 
   function convertToBase64(file: File): Promise<string> {
@@ -60,6 +64,10 @@ export default function UncontrolledForm() {
     };
 
     console.log(data);
+
+    formRef.current?.reset();
+
+    onSuccess();
   }
 
   return (
