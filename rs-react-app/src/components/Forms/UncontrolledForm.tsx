@@ -1,8 +1,9 @@
 import { buttonStyles } from '../../constants/constants';
 import type { UserFormData } from './form-type';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { addSubmission } from '../../store/userSlice';
 import { useAppDispatch } from '../../hooks/reduxHooks';
+import { userSchema } from './userSchema';
 
 type UncontrolledFormProps = {
   onSuccess: () => void;
@@ -11,6 +12,7 @@ type UncontrolledFormProps = {
 export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const dispatch = useAppDispatch();
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   function convertToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -69,6 +71,25 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
 
     console.log(data);
 
+    const result = userSchema.safeParse(data);
+
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+
+      result.error.issues.forEach((issue) => {
+        const field = issue.path[0];
+
+        if (typeof field === 'string') {
+          fieldErrors[field] = issue.message;
+        }
+      });
+
+      setErrors(fieldErrors);
+      return;
+    }
+
+    setErrors({});
+
     dispatch(
       addSubmission({
         ...data,
@@ -82,7 +103,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
 
   return (
     <form onSubmit={handleSubmit} ref={formRef}>
-      <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center flex-wrap mb-2">
         <label
           className="w-[70px] text-pink-800 font-bold leading-none"
           htmlFor="name"
@@ -95,8 +116,11 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           id="name"
           name="name"
         />
+        <p className="w-full  min-h-5 text-sm text-red-600">
+          {errors.name ?? ''}
+        </p>
       </div>
-      <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center flex-wrap mb-2">
         <label
           className="w-[70px] text-pink-800 font-bold leading-none"
           htmlFor="age"
@@ -109,8 +133,11 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           id="age"
           name="age"
         />
+        <p className="w-full  min-h-5 text-sm text-red-600">
+          {errors.age ?? ''}
+        </p>
       </div>
-      <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center flex-wrap mb-2">
         <label
           className="w-[70px] text-pink-800 font-bold leading-none"
           htmlFor="email"
@@ -123,8 +150,11 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           id="email"
           name="email"
         />
+        <p className="w-full  min-h-5 text-sm text-red-600">
+          {errors.email ?? ''}
+        </p>
       </div>
-      <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center flex-wrap mb-2">
         <label
           className="w-[70px] text-pink-800 font-bold leading-none"
           htmlFor="gender"
@@ -142,7 +172,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           <option value="other">Other</option>
         </select>
       </div>
-      <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center flex-wrap mb-2">
         <input
           className="w-[70px] border border-gray-400 rounded-md px-3 py-1"
           type="checkbox"
@@ -155,8 +185,11 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
         >
           Accept Terms and Conditions
         </label>
+        <p className="w-full  min-h-5 text-sm text-red-600">
+          {errors.termsAccepted ?? ''}
+        </p>
       </div>
-      <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center flex-wrap mb-2">
         <label
           className="w-[70px] text-pink-800 font-bold leading-none"
           htmlFor="image"
@@ -170,8 +203,11 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           name="image"
           accept=".png,.jpg,.jpeg"
         />
+        <p className="w-full  min-h-5 text-sm text-red-600">
+          {errors.image ?? ''}
+        </p>
       </div>
-      <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center flex-wrap mb-2">
         <label
           className="w-[70px] text-pink-800 font-bold leading-none"
           htmlFor="password"
@@ -184,8 +220,11 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           id="password"
           name="password"
         />
+        <p className="w-full  min-h-5 text-sm text-red-600">
+          {errors.password ?? ''}
+        </p>
       </div>
-      <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center flex-wrap mb-2">
         <label
           className="w-[70px] text-pink-800 font-bold leading-none"
           htmlFor="confirm-password"
@@ -198,8 +237,11 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           id="confirm-password"
           name="confirmPassword"
         />
+        <p className="w-full  min-h-5 text-sm text-red-600">
+          {errors.confirmPassword ?? ''}
+        </p>
       </div>
-      <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center flex-wrap mb-2">
         <label
           className="w-[70px] text-pink-800 font-bold leading-none"
           htmlFor="country"
@@ -217,6 +259,9 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           <option value="France">France</option>
           <option value="Italy">Italy</option>
         </datalist>
+        <p className="w-full  min-h-5 text-sm text-red-600">
+          {errors.country ?? ''}
+        </p>
       </div>
       <div className="flex items-center gap-3 mt-6 mb-2 justify-center">
         <button className={buttonStyles('indigo')} type="submit">
