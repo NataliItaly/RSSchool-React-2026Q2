@@ -9,4 +9,5 @@ export interface UserFormData {
   confirmPassword: string;
   country: string;
   imageBase64: string;
+  createdAt: number;
 }

@@ -67,6 +67,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
       confirmPassword: String(formData.get('confirmPassword') ?? ''),
       country: String(formData.get('country') ?? ''),
       imageBase64,
+      createdAt: Date.now(),
     };
 
     console.log(data);
@@ -74,6 +75,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
     const result = userSchema.safeParse(data);
 
     if (!result.success) {
+      console.log(result.error.flatten());
       const fieldErrors: Record<string, string> = {};
 
       result.error.issues.forEach((issue) => {
@@ -116,7 +118,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           id="name"
           name="name"
         />
-        <p className="w-full  min-h-5 text-sm text-red-600">
+        <p className="w-full  min-h-5 text-sm text-pink-600">
           {errors.name ?? ''}
         </p>
       </div>
@@ -133,7 +135,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           id="age"
           name="age"
         />
-        <p className="w-full  min-h-5 text-sm text-red-600">
+        <p className="w-full  min-h-5 text-sm text-pink-600">
           {errors.age ?? ''}
         </p>
       </div>
@@ -150,7 +152,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           id="email"
           name="email"
         />
-        <p className="w-full  min-h-5 text-sm text-red-600">
+        <p className="w-full  min-h-5 text-sm text-pink-600">
           {errors.email ?? ''}
         </p>
       </div>
@@ -171,6 +173,9 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           <option value="female">Female</option>
           <option value="other">Other</option>
         </select>
+        <p className="w-full  min-h-5 text-sm text-pink-600">
+          {errors.gender ?? ''}
+        </p>
       </div>
       <div className="flex items-center flex-wrap mb-2">
         <input
@@ -185,7 +190,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
         >
           Accept Terms and Conditions
         </label>
-        <p className="w-full  min-h-5 text-sm text-red-600">
+        <p className="w-full  min-h-5 text-sm text-pink-600">
           {errors.termsAccepted ?? ''}
         </p>
       </div>
@@ -203,7 +208,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           name="image"
           accept=".png,.jpg,.jpeg"
         />
-        <p className="w-full  min-h-5 text-sm text-red-600">
+        <p className="w-full  min-h-5 text-sm text-pink-600">
           {errors.image ?? ''}
         </p>
       </div>
@@ -220,7 +225,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           id="password"
           name="password"
         />
-        <p className="w-full  min-h-5 text-sm text-red-600">
+        <p className="w-full  min-h-5 text-sm text-pink-600">
           {errors.password ?? ''}
         </p>
       </div>
@@ -237,7 +242,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           id="confirm-password"
           name="confirmPassword"
         />
-        <p className="w-full  min-h-5 text-sm text-red-600">
+        <p className="w-full  min-h-5 text-sm text-pink-600">
           {errors.confirmPassword ?? ''}
         </p>
       </div>
@@ -259,7 +264,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           <option value="France">France</option>
           <option value="Italy">Italy</option>
         </datalist>
-        <p className="w-full  min-h-5 text-sm text-red-600">
+        <p className="w-full  min-h-5 text-sm text-pink-600">
           {errors.country ?? ''}
         </p>
       </div>
