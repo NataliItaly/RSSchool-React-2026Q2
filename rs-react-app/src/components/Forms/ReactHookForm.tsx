@@ -5,7 +5,6 @@ import { buttonStyles } from '../../constants/constants';
 import { addSubmission } from '../../store/userSlice';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import { userSchema } from './userSchema';
-import type { UserFormData } from './form-type';
 import { z } from 'zod';
 
 export type UserFormInput = z.infer<typeof userSchema>;
