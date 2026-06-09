@@ -104,7 +104,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} ref={formRef}>
+    <form className="overflow-auto" onSubmit={handleSubmit} ref={formRef}>
       <div className="flex items-center flex-wrap mb-2">
         <label
           className="w-[70px] text-pink-800 font-bold leading-none"

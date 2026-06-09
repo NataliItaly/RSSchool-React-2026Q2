@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 const countries = ['USA', 'France', 'Italy'];
 
+export type UserFormInput = z.infer<typeof userSchema>;
+
 export const userSchema = z
   .object({
     name: z

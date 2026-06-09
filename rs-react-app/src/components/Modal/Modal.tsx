@@ -36,9 +36,9 @@ export default function Modal({ isOpen, handleClose, children }: ModalProps) {
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="overlay fixed top-0 left-0 right-0 w-full min-h-dvh flex justify-center items-center bg-[#000000a0]">
+    <div className="overlay fixed top-0 left-0 right-0 w-full min-h-screen justify-center items-center bg-[#000000a0] overflow-auto">
       <div
-        className="modal relative p-5 bg-white rounded-md min-w-3xs"
+        className="modal relative h-[90vh] p-5 mx-auto my-5 bg-white rounded-md w-1/2 max-w-[600px] min-w-3xs overflow-auto"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"

@@ -20,14 +20,14 @@ export default function SubmissionCard({ user }: Props) {
   return (
     <div
       className={`
-        p-4 rounded-md border transition-all duration-500
+        p-4 w-2xs rounded-md border transition-all duration-500
         ${isNew ? 'border-green-500 bg-green-50' : 'border-gray-300'}
       `}
     >
       <img
         src={user.imageBase64}
         alt={user.name}
-        className="w-32 h-32 object-cover rounded-md mb-3"
+        className="w-full h-32 object-cover rounded-md mb-3"
       />
 
       <h3 className="font-bold text-lg">{user.name}</h3>

@@ -7,13 +7,12 @@ import { buttonStyles } from './constants/constants';
 import { useAppSelector } from './hooks/reduxHooks';
 
 export default function App() {
-  //const [isOpen, setIsOpen] = useState(false);
   const [formType, setFormType] = useState<'uncontrolled' | 'rhf' | null>(null);
 
   const submissions = useAppSelector((state) => state.users.submissions);
 
   return (
-    <div className="h-dvh ">
+    <div className="min-h-screen ">
       <div className="py-5 flex justify-center items-center gap-5">
         <button
           className={buttonStyles('pink')}
