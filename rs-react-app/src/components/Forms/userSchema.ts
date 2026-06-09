@@ -14,7 +14,7 @@ export const userSchema = z
         'First letter must be uppercase'
       ),
 
-    age: z.number().min(0, 'Age cannot be negative'),
+    age: z.number().min(1, 'Age is required and must be more than 0'),
 
     email: z
       .string()
@@ -50,7 +50,7 @@ export const userSchema = z
         'Country must be selected from the list'
       ),
 
-    imageBase64: z.string(),
+    imageBase64: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ['confirmPassword'],

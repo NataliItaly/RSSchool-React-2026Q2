@@ -7,10 +7,14 @@ import { useAppDispatch } from '../../hooks/reduxHooks';
 import { userSchema } from './userSchema';
 import { z } from 'zod';
 
+type ReactHookFormProps = {
+  onSuccess: () => void;
+};
+
 export type UserFormInput = z.infer<typeof userSchema>;
 type FormData = z.infer<typeof userSchema>;
 
-export default function ReactHookForm() {
+export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
   const dispatch = useAppDispatch();
 
   const {
@@ -18,9 +22,10 @@ export default function ReactHookForm() {
     handleSubmit,
     reset,
     setError,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<FormData>({
     resolver: zodResolver(userSchema),
+    mode: 'onChange',
     defaultValues: {
       name: '',
       age: 0,
@@ -47,7 +52,8 @@ export default function ReactHookForm() {
   }
 
   async function onSubmit(data: FormData) {
-    //const imageFile = data.image?.[0];
+    console.log('SUBMIT');
+    console.log('imageFile:', imageFile);
 
     if (!imageFile) {
       setError('imageBase64', {
@@ -56,7 +62,7 @@ export default function ReactHookForm() {
       });
       return;
     }
-
+    console.log(errors);
     const allowedTypes = ['image/png', 'image/jpeg'];
 
     if (!allowedTypes.includes(imageFile.type)) {
@@ -80,7 +86,7 @@ export default function ReactHookForm() {
     const imageBase64 = await convertToBase64(imageFile);
     const id = crypto.randomUUID();
     const createdAt = Date.now();
-
+    console.log('imageBase64 length:', imageBase64.length);
     dispatch(
       addSubmission({
         ...data,
@@ -90,8 +96,14 @@ export default function ReactHookForm() {
       })
     );
 
+    onSuccess();
     reset();
   }
+
+  const isImageValid =
+    imageFile &&
+    ['image/png', 'image/jpeg'].includes(imageFile.type) &&
+    imageFile.size <= 2 * 1024 * 1024;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -273,7 +285,7 @@ export default function ReactHookForm() {
         <input
           id="country"
           list="countries"
-          className="border border-gray-400 rounded-md px-3 py-1 flex-auto"
+          className="border border-gray-400 rounded-md px-3 py-1 flex-auto "
           {...register('country')}
         />
 
@@ -289,7 +301,11 @@ export default function ReactHookForm() {
       </div>
 
       <div className="flex items-center gap-3 mt-6 mb-2 justify-center">
-        <button className={buttonStyles('indigo')} type="submit">
+        <button
+          className={buttonStyles('indigo')}
+          type="submit"
+          disabled={!isValid || !isImageValid}
+        >
           Create Profile
         </button>
       </div>

@@ -36,7 +36,7 @@ export default function App() {
         {formType === 'uncontrolled' ? (
           <UncontrolledForm onSuccess={() => setFormType(null)} />
         ) : (
-          <ReactHookForm />
+          <ReactHookForm onSuccess={() => setFormType(null)} />
         )}
       </Modal>
     </div>
