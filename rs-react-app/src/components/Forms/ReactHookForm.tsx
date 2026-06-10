@@ -3,18 +3,20 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { buttonStyles } from '../../constants/constants';
 import { addSubmission } from '../../store/userSlice';
-import { useAppDispatch } from '../../hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { userSchema } from './userSchema';
 import { z } from 'zod';
+import { selectCountries } from '../../store/countrySlice';
 
 type ReactHookFormProps = {
   onSuccess: () => void;
 };
 
-export type UserFormInput = z.infer<typeof userSchema>;
-type FormData = z.infer<typeof userSchema>;
+export type UserFormInput = z.infer<ReturnType<typeof userSchema>>;
+type FormData = z.infer<ReturnType<typeof userSchema>>;
 
 export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
+  const countries = useAppSelector(selectCountries);
   const dispatch = useAppDispatch();
 
   const {
@@ -22,9 +24,9 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
     handleSubmit,
     reset,
     setError,
-    formState: { errors, isValid },
+    formState: { errors, isValid, touchedFields },
   } = useForm<FormData>({
-    resolver: zodResolver(userSchema),
+    resolver: zodResolver(userSchema(countries)),
     mode: 'all',
     defaultValues: {
       name: '',
@@ -108,16 +110,6 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex items-center flex-wrap mb-2">
-        <pre>
-          {JSON.stringify(
-            {
-              error: !!errors.name,
-              touched: touchedFields.name,
-            },
-            null,
-            2
-          )}
-        </pre>
         <label
           className="w-[70px] text-pink-800 font-bold leading-none"
           htmlFor="name"
@@ -126,13 +118,13 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
         </label>
 
         <input
-          className="border border-gray-400 rounded-md px-3 py-1 flex-auto ${
-    errors.name
-      ? 'border-pink-500 text-pink-600'
-      : touchedFields.name
-      ? 'border-green-700'
-      : 'border-gray-400'
-  }`}"
+          className={`border border-gray-400 rounded-md px-3 py-1 flex-auto ${
+            errors.name
+              ? 'border-pink-500 text-pink-600'
+              : touchedFields.name
+                ? 'border-green-700'
+                : 'border-gray-400'
+          }`}
           id="name"
           {...register('name')}
         />
@@ -301,14 +293,14 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
         <input
           id="country"
           list="countries"
-          className="border border-gray-400 rounded-md px-3 py-1 flex-auto invalid:border-pink-500 invalid:text-pink-600 valid:border-green-700"
+          className="border border-gray-400 rounded-md px-3 py-1 flex-auto"
           {...register('country')}
         />
 
         <datalist id="countries">
-          <option value="USA" />
-          <option value="France" />
-          <option value="Italy" />
+          {countries.map((country) => (
+            <option key={country} value={country} />
+          ))}
         </datalist>
 
         <p className="w-full min-h-5 text-sm text-pink-600">
