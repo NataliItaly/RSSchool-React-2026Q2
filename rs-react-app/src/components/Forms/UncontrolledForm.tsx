@@ -5,6 +5,7 @@ import { addSubmission } from '../../store/userSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { userSchema } from './userSchema';
 import { selectCountries } from '../../store/countrySlice';
+import getPasswordStrength from '../../utils/getPasswordStrength';
 
 type UncontrolledFormProps = {
   onSuccess: () => void;
@@ -16,6 +17,8 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const dispatch = useAppDispatch();
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [password, setPassword] = useState('');
+  const passwordStrength = getPasswordStrength(password);
 
   function convertToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -235,7 +238,20 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           type="password"
           id="password"
           name="password"
+          onChange={(e) => setPassword(e.target.value)}
         />
+        {password.length > 0 && (
+          <div className="w-full mt-1">
+            <div className="w-36 h-2 bg-gray-200 rounded">
+              <div
+                className={`h-2 rounded ${passwordStrength.color}`}
+                style={{ width: passwordStrength.width }}
+              />
+            </div>
+
+            <p className="text-sm mt-1">Strength: {passwordStrength.label}</p>
+          </div>
+        )}
         <p className="w-full  min-h-5 text-sm text-pink-600">
           {errors.password ?? ''}
         </p>

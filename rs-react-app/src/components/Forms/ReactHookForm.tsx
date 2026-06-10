@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { userSchema } from './userSchema';
 import { z } from 'zod';
 import { selectCountries } from '../../store/countrySlice';
+import getPasswordStrength from '../../utils/getPasswordStrength';
 
 type ReactHookFormProps = {
   onSuccess: () => void;
@@ -24,6 +25,7 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
     handleSubmit,
     reset,
     setError,
+    watch,
     formState: { errors, isValid, touchedFields },
   } = useForm<FormData>({
     resolver: zodResolver(userSchema(countries)),
@@ -39,6 +41,9 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
       country: '',
     },
   });
+
+  const password = watch('password');
+  const passwordStrength = getPasswordStrength(password ?? '');
 
   const [imageFile, setImageFile] = useState<File | null>(null);
 
@@ -256,6 +261,19 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
           className="border border-gray-400 rounded-md px-3 py-1 flex-auto invalid:border-pink-500 invalid:text-pink-600"
           {...register('password')}
         />
+
+        {password.length > 0 && (
+          <div className="w-full mt-1">
+            <div className="w-36 h-2 bg-gray-200 rounded">
+              <div
+                className={`h-2 rounded ${passwordStrength.color}`}
+                style={{ width: passwordStrength.width }}
+              />
+            </div>
+
+            <p className="text-sm mt-1">Strength: {passwordStrength.label}</p>
+          </div>
+        )}
 
         <p className="w-full min-h-5 text-sm text-pink-600">
           {errors.password?.message}
