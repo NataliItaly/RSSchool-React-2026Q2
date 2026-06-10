@@ -25,10 +25,10 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
     formState: { errors, isValid },
   } = useForm<FormData>({
     resolver: zodResolver(userSchema),
-    mode: 'onChange',
+    mode: 'all',
     defaultValues: {
       name: '',
-      age: 0,
+      age: undefined,
       email: '',
       gender: '',
       termsAccepted: false,
@@ -108,6 +108,16 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex items-center flex-wrap mb-2">
+        <pre>
+          {JSON.stringify(
+            {
+              error: !!errors.name,
+              touched: touchedFields.name,
+            },
+            null,
+            2
+          )}
+        </pre>
         <label
           className="w-[70px] text-pink-800 font-bold leading-none"
           htmlFor="name"
@@ -116,7 +126,13 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
         </label>
 
         <input
-          className="border border-gray-400 rounded-md px-3 py-1 flex-auto"
+          className="border border-gray-400 rounded-md px-3 py-1 flex-auto ${
+    errors.name
+      ? 'border-pink-500 text-pink-600'
+      : touchedFields.name
+      ? 'border-green-700'
+      : 'border-gray-400'
+  }`}"
           id="name"
           {...register('name')}
         />
@@ -137,7 +153,7 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
         <input
           type="number"
           id="age"
-          className="border border-gray-400 rounded-md px-3 py-1 flex-auto"
+          className="border border-gray-400 rounded-md px-3 py-1 flex-auto invalid:border-pink-500 invalid:text-pink-600"
           {...register('age', { valueAsNumber: true })}
         />
 
@@ -157,7 +173,7 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
         <input
           type="email"
           id="email"
-          className="border border-gray-400 rounded-md px-3 py-1 flex-auto"
+          className="border border-gray-400 rounded-md px-3 py-1 flex-auto invalid:border-pink-500 invalid:text-pink-600"
           {...register('email')}
         />
 
@@ -176,7 +192,7 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
 
         <select
           id="gender"
-          className="border border-gray-400 rounded-md px-3 py-1 flex-auto"
+          className="border border-gray-400 rounded-md px-3 py-1 flex-auto invalid:border-pink-500 invalid:text-pink-600"
           {...register('gender')}
         >
           <option value="">Select gender</option>
@@ -222,7 +238,7 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
           type="file"
           id="image"
           accept=".png,.jpg,.jpeg"
-          className="border border-gray-400 rounded-md px-3 py-1 flex-auto"
+          className="border border-gray-400 rounded-md px-3 py-1 flex-auto invalid:border-pink-500 invalid:text-pink-600"
           onChange={(e) => {
             const file = e.target.files?.[0] ?? null;
             setImageFile(file);
@@ -245,7 +261,7 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
         <input
           type="password"
           id="password"
-          className="border border-gray-400 rounded-md px-3 py-1 flex-auto"
+          className="border border-gray-400 rounded-md px-3 py-1 flex-auto invalid:border-pink-500 invalid:text-pink-600"
           {...register('password')}
         />
 
@@ -265,7 +281,7 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
         <input
           type="password"
           id="confirm-password"
-          className="border border-gray-400 rounded-md px-3 py-1 flex-auto"
+          className="border border-gray-400 rounded-md px-3 py-1 flex-auto invalid:border-pink-500 invalid:text-pink-600"
           {...register('confirmPassword')}
         />
 
@@ -285,7 +301,7 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
         <input
           id="country"
           list="countries"
-          className="border border-gray-400 rounded-md px-3 py-1 flex-auto "
+          className="border border-gray-400 rounded-md px-3 py-1 flex-auto invalid:border-pink-500 invalid:text-pink-600 valid:border-green-700"
           {...register('country')}
         />
 
@@ -300,7 +316,7 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
         </p>
       </div>
 
-      <div className="flex items-center gap-3 mt-6 mb-2 justify-center">
+      <div className="flex flex-col items-center gap-3 mt-6 mb-2 justify-center">
         <button
           className={buttonStyles('indigo')}
           type="submit"
@@ -308,6 +324,11 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
         >
           Create Profile
         </button>
+        {!isValid && (
+          <p className="text-sm text-pink-700 mt-2">
+            Complete all required fields to continue.
+          </p>
+        )}
       </div>
     </form>
   );

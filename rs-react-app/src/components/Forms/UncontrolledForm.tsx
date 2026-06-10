@@ -2,14 +2,17 @@ import { buttonStyles } from '../../constants/constants';
 import type { UserFormData } from './form-type';
 import { useRef, useState } from 'react';
 import { addSubmission } from '../../store/userSlice';
-import { useAppDispatch } from '../../hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { userSchema } from './userSchema';
+import { selectCountries } from '../../store/countrySlice';
 
 type UncontrolledFormProps = {
   onSuccess: () => void;
 };
 
 export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
+  const countries = useAppSelector(selectCountries);
+
   const formRef = useRef<HTMLFormElement | null>(null);
   const dispatch = useAppDispatch();
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -72,7 +75,15 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
 
     console.log(data);
 
-    const result = userSchema.safeParse(data);
+    if (!countries.includes(data.country)) {
+      setErrors({
+        country: 'Please select a valid country',
+      });
+
+      return;
+    }
+
+    const result = userSchema(countries).safeParse(data);
 
     if (!result.success) {
       console.log(result.error.flatten());
@@ -260,9 +271,9 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
           name="country"
         />
         <datalist id="countries">
-          <option value="USA">USA</option>
-          <option value="France">France</option>
-          <option value="Italy">Italy</option>
+          {countries.map((country: string) => (
+            <option key={country} value={country} />
+          ))}
         </datalist>
         <p className="w-full  min-h-5 text-sm text-pink-600">
           {errors.country ?? ''}
