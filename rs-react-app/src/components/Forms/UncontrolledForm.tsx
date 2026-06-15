@@ -38,9 +38,17 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-
     const image = formData.get('image');
+    console.log('TEST IMAGE:', image);
+    console.log('TEST SIZE:', image instanceof File ? image.size : 'not file');
 
+    console.log('image:', image);
+    console.log('instanceof File:', image instanceof File);
+
+    if (image instanceof File) {
+      console.log('size:', image.size);
+      console.log('name:', image.name);
+    }
     if (!(image instanceof File) || image.size === 0) {
       alert('Please select an image');
       return;
@@ -61,7 +69,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
     }
 
     const imageBase64 = await convertToBase64(image);
-
+    console.log('after convertToBase64');
     const data: UserFormData = {
       id: crypto.randomUUID(),
       name: String(formData.get('name') ?? ''),
@@ -89,7 +97,7 @@ export default function UncontrolledForm({ onSuccess }: UncontrolledFormProps) {
     const result = userSchema(countries).safeParse(data);
 
     if (!result.success) {
-      console.log(result.error.flatten());
+      console.log(result.error.issues);
       const fieldErrors: Record<string, string> = {};
 
       result.error.issues.forEach((issue) => {
