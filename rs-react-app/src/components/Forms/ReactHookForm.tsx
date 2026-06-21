@@ -107,10 +107,10 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
     reset();
   }
 
-  const isImageValid =
+  /* const isImageValid =
     imageFile &&
     ['image/png', 'image/jpeg'].includes(imageFile.type) &&
-    imageFile.size <= 2 * 1024 * 1024;
+    imageFile.size <= 2 * 1024 * 1024; */
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -330,7 +330,7 @@ export default function ReactHookForm({ onSuccess }: ReactHookFormProps) {
         <button
           className={buttonStyles('indigo')}
           type="submit"
-          disabled={!isValid || !isImageValid}
+          disabled={!isValid}
         >
           Create Profile
         </button>
