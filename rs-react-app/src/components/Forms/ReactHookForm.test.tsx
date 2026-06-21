@@ -24,7 +24,23 @@ beforeEach(() => {
   vi.stubGlobal('FileReader', MockFileReader);
 });
 
-describe('UncontrolledForm component', () => {
+async function fillValidForm(user: ReturnType<typeof userEvent.setup>) {
+  await user.type(screen.getByLabelText(/name/i), 'John Doe');
+  await user.type(screen.getByLabelText(/age/i), '30');
+  await user.type(screen.getByLabelText(/email/i), 'john@test.com');
+
+  await user.selectOptions(screen.getByLabelText(/gender/i), 'male');
+
+  await user.click(screen.getByLabelText(/accept terms and conditions/i));
+
+  await user.type(screen.getByLabelText(/^password$/i), 'Password123!');
+
+  await user.type(screen.getByLabelText(/confirm password/i), 'Password123!');
+
+  await user.type(screen.getByLabelText(/choose country/i), 'Italy');
+}
+
+describe('ReactHookForm component', () => {
   it('renders form fields', () => {
     render(
       <Provider store={store}>
@@ -147,5 +163,75 @@ describe('UncontrolledForm component', () => {
     await waitFor(() => {
       expect(onSuccess).toHaveBeenCalled();
     });
+  });
+
+  it('shows error when image is not selected', async () => {
+    const user = userEvent.setup();
+
+    render(<ReactHookForm onSuccess={vi.fn()} />);
+
+    await fillValidForm(user);
+
+    const submitButton = screen.getByRole('button', {
+      name: /create profile/i,
+    });
+
+    await user.click(submitButton);
+
+    expect(
+      await screen.findByText(/please select an image/i)
+    ).toBeInTheDocument();
+  });
+
+  it('shows error for unsupported image type', async () => {
+    const user = userEvent.setup();
+
+    render(<ReactHookForm onSuccess={vi.fn()} />);
+
+    await fillValidForm(user);
+
+    const file = new File(['dummy'], 'document.pdf', {
+      type: 'application/pdf',
+    });
+
+    const input = screen.getByLabelText(/upload image/i);
+
+    await user.upload(input, file);
+
+    await user.click(
+      screen.getByRole('button', {
+        name: /create profile/i,
+      })
+    );
+
+    expect(
+      await screen.findByText(/only png and jpeg images are allowed/i)
+    ).toBeInTheDocument();
+  });
+
+  it('shows error when image exceeds 2MB', async () => {
+    const user = userEvent.setup();
+
+    render(<ReactHookForm onSuccess={vi.fn()} />);
+
+    await fillValidForm(user);
+
+    const bigFile = new File([new Uint8Array(3 * 1024 * 1024)], 'large.png', {
+      type: 'image/png',
+    });
+
+    const input = screen.getByLabelText(/upload image/i);
+
+    await user.upload(input, bigFile);
+
+    await user.click(
+      screen.getByRole('button', {
+        name: /create profile/i,
+      })
+    );
+
+    expect(
+      await screen.findByText(/image size must be less than 2 mb/i)
+    ).toBeInTheDocument();
   });
 });
