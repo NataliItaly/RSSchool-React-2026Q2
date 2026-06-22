@@ -1,34 +1,31 @@
+'use client';
+
 import Card from '../Card/Card';
 import type { CardItem } from '../../types';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 type CardListProps = {
   items: CardItem[];
 };
 
-export default function CardList ({items}: CardListProps) {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+export default function CardList({ items }: CardListProps) {
+  const router = useRouter();
+  //const navigate = useNavigate();
+  const searchParams = useSearchParams();
 
   function openDetails(id: string | number) {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
 
     params.set('details', String(id));
 
-    navigate({
-      pathname: '/',
-      search: params.toString(),
-    });
+    router.push(`?${params.toString()}`);
   }
 
   return (
-    <div className='w-full flex flex-wrap justify-center gap-5 mb-8'
-    >
+    <div className="w-full flex flex-wrap justify-center gap-5 mb-8">
       {items.map((item: CardItem) => (
-        <Card key={item.id} item={item} onClick={() => openDetails(item.id)}/>
+        <Card key={item.id} item={item} onClick={() => openDetails(item.id)} />
       ))}
     </div>
   );
 }
-
-

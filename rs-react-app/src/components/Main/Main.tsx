@@ -29,9 +29,8 @@ export default function Main() {
 
   const searchParams = useSearchParams();
   const page = Number(searchParams.get('page')) || 1;
-  const search =
-    searchParams.get('search') ??
-    JSON.parse(localStorage.getItem('search') ?? '""');
+  const search = searchParams.get('search') ?? '';
+  //JSON.parse(localStorage.getItem('search') ?? '""');
 
   React.useEffect(() => {
     dispatch(hydrateSelectedItems(storedSelectedItems));
@@ -44,12 +43,13 @@ export default function Main() {
   React.useEffect(() => {
     // Ensure page always exists in URL
     if (!searchParams.get('page')) {
-      const params = new URLSearchParams(searchParams);
+      const params = new URLSearchParams(searchParams.toString());
       params.set('page', '1');
 
       //setSearchParams(params, { replace: true });
+      router.replace(`?${params.toString()}`);
     }
-  }, [searchParams]);
+  }, [searchParams, router]);
 
   function clearSelectedItems() {
     dispatch(unselectAll());
@@ -102,6 +102,7 @@ export default function Main() {
     const params = new URLSearchParams(searchParams);
     params.delete('details');
     //setSearchParams(params);
+    router.push(`?${params.toString()}`);
   }
 
   const items = data?.results ?? [];
@@ -122,6 +123,7 @@ export default function Main() {
 
     params.set('page', '1');
 
+    router.push(`?${params.toString()}`);
     //setSearchParams(params);
   }
 
@@ -129,6 +131,8 @@ export default function Main() {
     const params = new URLSearchParams(searchParams);
     params.set('page', String(page + 1));
     //setSearchParams(params);
+
+    router.push(`?${params.toString()}`);
   }
 
   function prevPage() {
@@ -137,6 +141,8 @@ export default function Main() {
     const params = new URLSearchParams(searchParams);
     params.set('page', String(page - 1));
     //setSearchParams(params);
+
+    router.push(`?${params.toString()}`);
   }
 
   function handleRefresh() {
@@ -153,15 +159,11 @@ export default function Main() {
           <Search onSearch={handleSearch} />
           <Refresh onRefresh={handleRefresh} disabled={isFetching} />
         </div>
-
         {isLoading && <p className="text-center text-lg">Loading...</p>}
-
         {isFetching && !isLoading && (
           <p className="text-center text-sm">Refreshing...</p>
         )}
-
         <BuggyButton />
-
         {error && (
           <p className="text-red-700 text-center text-lg">
             Failed to load characters. Please try again.
@@ -169,7 +171,6 @@ export default function Main() {
         )}
 
         <CardList items={items} />
-
         <Pagination
           prevPage={prevPage}
           page={page}
