@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { CardItem } from '../types';
 
-const CACHE_TTL = Number(import.meta.env.VITE_CACHE_TTL) || 60;
+const CACHE_TTL = 60;
+// Number(import.meta.env.VITE_CACHE_TTL) ||
 
 export interface CharactersResponse {
   info: {

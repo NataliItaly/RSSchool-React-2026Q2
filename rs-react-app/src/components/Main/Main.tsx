@@ -1,8 +1,10 @@
+'use client';
+
 import React from 'react';
 import Search from '../Search/Search';
 import CardList from '../CardList/CardList';
 import BuggyButton from '../BuggyButton/BuggyButton';
-import { useSearchParams, Outlet } from 'react-router-dom';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Pagination from '../Pagination/Pagination';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import {
@@ -14,15 +16,18 @@ import { useLocalStorage } from '../../hooks/useLocalStorage';
 import Toolbar from '../Toolbar/Toolbar';
 import { useGetCharactersQuery, api } from '../../api/api';
 import Refresh from '../Refresh/Refresh';
+import ItemDetails from '../../pages/ItemDetails/ItemDetails';
 
 export default function Main() {
+  const router = useRouter();
+
   const dispatch = useAppDispatch();
   const selectedItems = useAppSelector((state) => state.selectedItems.items);
   const [storedSelectedItems, setStoredSelectedItems] = useLocalStorage<
     SelectedItem[]
   >('selectedItems', []);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParams = useSearchParams();
   const page = Number(searchParams.get('page')) || 1;
   const search =
     searchParams.get('search') ??
@@ -42,9 +47,9 @@ export default function Main() {
       const params = new URLSearchParams(searchParams);
       params.set('page', '1');
 
-      setSearchParams(params, { replace: true });
+      //setSearchParams(params, { replace: true });
     }
-  }, [searchParams, setSearchParams]);
+  }, [searchParams]);
 
   function clearSelectedItems() {
     dispatch(unselectAll());
@@ -96,7 +101,7 @@ export default function Main() {
   function closeDetails() {
     const params = new URLSearchParams(searchParams);
     params.delete('details');
-    setSearchParams(params);
+    //setSearchParams(params);
   }
 
   const items = data?.results ?? [];
@@ -117,13 +122,13 @@ export default function Main() {
 
     params.set('page', '1');
 
-    setSearchParams(params);
+    //setSearchParams(params);
   }
 
   function nextPage() {
     const params = new URLSearchParams(searchParams);
     params.set('page', String(page + 1));
-    setSearchParams(params);
+    //setSearchParams(params);
   }
 
   function prevPage() {
@@ -131,7 +136,7 @@ export default function Main() {
 
     const params = new URLSearchParams(searchParams);
     params.set('page', String(page - 1));
-    setSearchParams(params);
+    //setSearchParams(params);
   }
 
   function handleRefresh() {
@@ -186,7 +191,7 @@ export default function Main() {
               ✕
             </button>
 
-            <Outlet />
+            <ItemDetails />
           </div>
         </div>
       )}

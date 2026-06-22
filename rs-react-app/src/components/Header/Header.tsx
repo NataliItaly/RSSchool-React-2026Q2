@@ -1,8 +1,10 @@
-import { useTheme } from "../../context/useTheme";
-import { Link } from "react-router-dom";
+'use client';
 
-export default function Header () {
-  const {theme, setTheme} = useTheme()
+import { useTheme } from '../../context/useTheme';
+import Link from 'next/link';
+
+export default function Header() {
+  const { theme, setTheme } = useTheme();
 
   return (
     <header
@@ -10,7 +12,7 @@ export default function Header () {
       dark:border-gray-700"
     >
       <Link
-        to="/about"
+        href="/about"
         className="flex justify-center items-center px-5 py-2.5 bg-pink-700 text-white rounded-md hover:bg-pink-500 transition-all duration-500 cursor-pointer"
       >
         About
@@ -33,5 +35,3 @@ export default function Header () {
     </header>
   );
 }
-
-
