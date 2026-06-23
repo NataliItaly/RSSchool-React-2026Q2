@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from 'next/link';
 
 export default function About() {
   return (
@@ -33,7 +33,7 @@ export default function About() {
           <img className="w-full" src="/rss-logo.svg" alt="RS School logo" />
         </a>
         <Link
-          to="/"
+          href="/"
           className="flex justify-center items-center px-5 py-2.5 bg-pink-700 text-white rounded-md hover:bg-pink-500 transition-all duration-500 cursor-pointer"
         >
           Back to Main
