@@ -1,5 +1,6 @@
-import App from '../App';
+//import App from '../App';
+import Main from '../components/Main/Main';
 
 export default function HomePage() {
-  return <App />;
+  return <Main />;
 }

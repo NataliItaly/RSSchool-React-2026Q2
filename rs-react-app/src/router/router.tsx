@@ -1,9 +1,9 @@
-import { createBrowserRouter } from 'react-router-dom'
-import App from '../App'
+import { createBrowserRouter } from 'react-router-dom';
+import App from '../App';
 import Main from '../components/Main/Main';
-import About from '../pages/About/About';
-import NotFound from '../pages/NotFound/NotFound';
-import ItemDetails from '../pages/ItemDetails/ItemDetails';
+import About from '../app/about/page';
+import NotFound from '../app/not-found';
+import ItemDetails from '../app/item-details/page';
 
 export const router = createBrowserRouter([
   {

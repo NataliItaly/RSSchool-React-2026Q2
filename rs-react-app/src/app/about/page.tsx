@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function About() {
   return (
-    <div className="w-full min-h-full flex justify-center items-center">
+    <div className="w-full min-h-full flex justify-center items-center dark:bg-gray-900 dark:text-white">
       <div className="p-5 max-w-md flex flex-col items-center gap-4">
         <p className="text-center flex flex-col">
           <span>This App is made by a student of</span>
@@ -11,7 +11,7 @@ export default function About() {
             href="https://rs.school/courses/reactjs"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-indigo-700 text-xl font-bold"
+            className="text-indigo-700 text-xl font-bold dark:text-indigo-400"
           >
             React 2026 Q2
           </a>
