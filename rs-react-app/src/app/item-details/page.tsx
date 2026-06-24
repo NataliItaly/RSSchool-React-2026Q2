@@ -1,8 +1,10 @@
-import { useSearchParams } from "react-router-dom";
-import { useGetCharacterByIdQuery } from "../../api/api";
+'use client';
+
+import { useSearchParams } from 'next/navigation';
+import { useGetCharacterByIdQuery } from '../../api/api';
 
 export default function ItemDetails() {
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
 
   const id = searchParams.get('details');
 
@@ -30,7 +32,6 @@ export default function ItemDetails() {
     return <p>No character</p>;
   }
 
-
   return (
     <div className="flex flex-col justify-center items-center">
       <h2 className="text-center text-2xl font-bold text-indigo-700 text-bold">
@@ -45,11 +46,13 @@ export default function ItemDetails() {
         Gender:{' '}
         <b
           className={`text-lg
-            ${character.gender === 'Male'
-              ? 'text-indigo-700'
-              : character.gender === 'Female'
-                ? 'text-pink-700'
-                : 'text-orange-700'}`}
+            ${
+              character.gender === 'Male'
+                ? 'text-indigo-700'
+                : character.gender === 'Female'
+                  ? 'text-pink-700'
+                  : 'text-orange-700'
+            }`}
         >
           {character.gender}
         </b>

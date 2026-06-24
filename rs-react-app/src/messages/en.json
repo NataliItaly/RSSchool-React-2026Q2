@@ -1,0 +1,10 @@
+{
+  "Header": {
+    "about": "About",
+    "home": "Home"
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "back": "Back to main"
+  }
+}
