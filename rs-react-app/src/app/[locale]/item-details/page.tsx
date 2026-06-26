@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useGetCharacterByIdQuery } from '../../api/api';
+import { useGetCharacterByIdQuery } from '../../../api/api';
 
 export default function ItemDetails() {
   const searchParams = useSearchParams();

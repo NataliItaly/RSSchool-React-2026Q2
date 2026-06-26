@@ -16,7 +16,7 @@ import { useLocalStorage } from '../../hooks/useLocalStorage';
 import Toolbar from '../Toolbar/Toolbar';
 import { useGetCharactersQuery, api } from '../../api/api';
 import Refresh from '../Refresh/Refresh';
-import ItemDetails from '../../app/item-details/page';
+import ItemDetails from '../../app/[locale]/item-details/page';
 
 export default function Main() {
   const router = useRouter();

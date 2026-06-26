@@ -2,6 +2,7 @@
 
 import { useTheme } from '../../context/useTheme';
 import Link from 'next/link';
+import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
@@ -32,6 +33,7 @@ export default function Header() {
         <option value="light">Light</option>
         <option value="dark">Dark</option>
       </select>
+      <LanguageSwitcher />
     </header>
   );
 }
