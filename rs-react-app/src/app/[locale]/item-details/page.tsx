@@ -2,11 +2,12 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useGetCharacterByIdQuery } from '../../../api/api';
+import { useTranslations } from 'next-intl';
 
 export default function ItemDetails() {
   const searchParams = useSearchParams();
-
   const id = searchParams.get('details');
+  const t = useTranslations('Card');
 
   const {
     data: character,
@@ -43,7 +44,7 @@ export default function ItemDetails() {
         alt={character.name}
       />
       <p className="w-fit">
-        Gender:{' '}
+        {t('gender')}:{' '}
         <b
           className={`text-lg
             ${
@@ -58,7 +59,7 @@ export default function ItemDetails() {
         </b>
       </p>
       <p>
-        Species:{' '}
+        {t('species')}:{' '}
         <b
           className={` text-lg
             ${character.species === 'Human' ? 'text-violet-600' : 'text-green-700'}`}
@@ -67,7 +68,7 @@ export default function ItemDetails() {
         </b>
       </p>
       <p>
-        Status:{' '}
+        {t('status')}:{' '}
         <b
           className={`text-lg ${character.status === 'alive' ? 'text-green-700' : 'text-red-700'}`}
         >
@@ -75,11 +76,11 @@ export default function ItemDetails() {
         </b>
       </p>
       <p>
-        Location:{' '}
+        {t('location')}:{' '}
         <b className="text-blue-800 text-lg">
           {character?.location?.name
             ? character.location.name.split(' ')[0]
-            : 'Unknown location'}
+            : t('unknownLocation')}
         </b>
       </p>
     </div>

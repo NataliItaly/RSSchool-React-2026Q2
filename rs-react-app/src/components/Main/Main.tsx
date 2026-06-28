@@ -17,6 +17,7 @@ import Toolbar from '../Toolbar/Toolbar';
 import { useGetCharactersQuery, api } from '../../api/api';
 import Refresh from '../Refresh/Refresh';
 import ItemDetails from '../../app/[locale]/item-details/page';
+import { useTranslations } from 'next-intl';
 
 export default function Main() {
   const router = useRouter();
@@ -31,6 +32,8 @@ export default function Main() {
   const page = Number(searchParams.get('page')) || 1;
   const search = searchParams.get('search') ?? '';
   //JSON.parse(localStorage.getItem('search') ?? '""');
+
+  const t = useTranslations('Main');
 
   React.useEffect(() => {
     dispatch(hydrateSelectedItems(storedSelectedItems));
@@ -165,9 +168,7 @@ export default function Main() {
         )}
         <BuggyButton />
         {error && (
-          <p className="text-red-700 text-center text-lg">
-            Failed to load characters. Please try again.
-          </p>
+          <p className="text-red-700 text-center text-lg">{t('error')}</p>
         )}
 
         <CardList items={items} />

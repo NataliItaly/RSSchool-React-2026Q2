@@ -1,16 +1,20 @@
 import type { CardItem } from '../../types/index';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import { selectItem, unselectItem } from '../../store/selectedItemsSlice';
+import { useTranslations } from 'next-intl';
 
 type CardProps = {
   item: CardItem;
   onClick?: () => void;
 };
 
-export default function Card({item, onClick}: CardProps) {
-  const dispatch = useAppDispatch()
-  const selectedItems = useAppSelector(state => state.selectedItems.items);
-  const isSelected = selectedItems.some(selected => selected.id === String(item.id))
+export default function Card({ item, onClick }: CardProps) {
+  const dispatch = useAppDispatch();
+  const selectedItems = useAppSelector((state) => state.selectedItems.items);
+  const isSelected = selectedItems.some(
+    (selected) => selected.id === String(item.id)
+  );
+  const t = useTranslations('Card');
 
   function handleCheckbox(e: React.ChangeEvent<HTMLInputElement>) {
     e.stopPropagation();
@@ -35,7 +39,7 @@ export default function Card({item, onClick}: CardProps) {
       onClick={onClick}
     >
       <h4 className="min-h-14 flex gap-1.5 justify-between items-center">
-        Name{' '}
+        {t('name')}{' '}
         <b className="text-indigo-700 text-lg text-right transition-all duration-700">
           {item.name}
         </b>
@@ -51,7 +55,7 @@ export default function Card({item, onClick}: CardProps) {
       </div>
 
       <p>
-        Gender{' '}
+        {t('gender')}{' '}
         <b
           className={
             item.gender === 'Male'
@@ -65,7 +69,7 @@ export default function Card({item, onClick}: CardProps) {
         </b>
       </p>
       <p>
-        Species{' '}
+        {t('species')}{' '}
         <b
           className={
             item.species === 'Human' ? 'text-violet-600' : 'text-green-700'
@@ -84,5 +88,3 @@ export default function Card({item, onClick}: CardProps) {
     </div>
   );
 }
-
-

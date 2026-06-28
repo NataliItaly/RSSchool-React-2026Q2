@@ -3,9 +3,11 @@
 import { useTheme } from '../../context/useTheme';
 import Link from 'next/link';
 import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
+import { useTranslations } from 'next-intl';
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
+  const t = useTranslations('Header');
 
   return (
     <header
@@ -16,11 +18,11 @@ export default function Header() {
         href="/about"
         className="flex justify-center items-center px-5 py-2.5 bg-pink-700 text-white rounded-md hover:bg-pink-500 transition-all duration-500 cursor-pointer"
       >
-        About
+        {t('about')}
       </Link>
 
       <h2 className="text-center text-indigo-800 text-4xl font-bold text-shadow-xs text-shadow-pink-500 dark:text-indigo-300">
-        Rick and Morty App
+        {t('title')}
       </h2>
       <select
         className="px-2 py-1 rounded-md cursor-pointer dark:bg-gray-800
@@ -30,8 +32,8 @@ export default function Header() {
           setTheme(e.target.value as 'light' | 'dark');
         }}
       >
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
+        <option value="light">{t('light')}</option>
+        <option value="dark">{t('dark')}</option>
       </select>
       <LanguageSwitcher />
     </header>

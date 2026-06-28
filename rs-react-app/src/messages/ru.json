@@ -1,7 +1,41 @@
 {
   "Header": {
     "about": "Про нас",
-    "home": "Глaвная"
+    "title": "Рик и Морти Апп",
+    "home": "Глaвная",
+    "light": "светлая",
+    "dark": "темная"
+  },
+  "LanguageSwitcher": {
+    "en": "Ан",
+    "ru": "Ру"
+  },
+  "Main": {
+    "error": "Не удалось загрузить персонажей. Пожалуйста, попробуйте снова."
+  },
+  "Refresh": {
+    "refresh": "Обновить"
+  },
+  "BuggyButton": {
+    "crash": "Сломать Апп"
+  },
+  "Search": {
+    "search": "Найти"
+  },
+  "Card": {
+    "name": "Имя",
+    "gender": "Пол",
+    "species": "Вид",
+    "status": "Статус",
+    "location": "Локация",
+    "unknownLocation": "Hеизвестная локация"
+  },
+  "Pagination": {
+    "prev": "Пред",
+    "next": "След"
+  },
+  "Footer": {
+    "created": "Это приложение создано для школьного задания RS School"
   },
   "NotFound": {
     "title": "Страница не найдена",

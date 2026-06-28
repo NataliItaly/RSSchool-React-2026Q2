@@ -1,3 +1,7 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
+
 type PaginationProps = {
   prevPage: () => void;
   page: number;
@@ -5,7 +9,14 @@ type PaginationProps = {
   hasNext: boolean;
 };
 
-export default function Pagination({ prevPage, page, nextPage, hasNext }: PaginationProps) {
+export default function Pagination({
+  prevPage,
+  page,
+  nextPage,
+  hasNext,
+}: PaginationProps) {
+  const t = useTranslations('Pagination');
+
   return (
     <div className="mt-5 flex justify-center items-center gap-4">
       <button
@@ -13,7 +24,7 @@ export default function Pagination({ prevPage, page, nextPage, hasNext }: Pagina
         onClick={prevPage}
         disabled={page === 1}
       >
-        Prev
+        {t('prev')}
       </button>
 
       <span className="mx-2.5 my-0 text-xl">{page}</span>
@@ -23,7 +34,7 @@ export default function Pagination({ prevPage, page, nextPage, hasNext }: Pagina
         onClick={nextPage}
         disabled={!hasNext}
       >
-        Next
+        {t('next')}
       </button>
     </div>
   );

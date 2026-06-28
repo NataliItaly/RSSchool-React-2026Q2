@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { useTranslations } from 'next-intl';
 
 type Props = {
   onSearch: (value: string) => void;
@@ -16,6 +19,7 @@ export default function Search({ onSearch }: Props) {
     value: savedSearch,
     lastSearch: savedSearch,
   });
+  const t = useTranslations('Search');
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
     setSearchState((prev) => ({ ...prev, value: e.target.value }));
@@ -43,9 +47,8 @@ export default function Search({ onSearch }: Props) {
         className="py-2 px-8 rounded-md text-white bg-indigo-600 hover:bg-indigo-500 cursor-pointer transition-all duration-600"
         onClick={handleSearch}
       >
-        Search
+        {t('search')}
       </button>
     </div>
   );
 }
-
