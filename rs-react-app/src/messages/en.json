@@ -1,0 +1,44 @@
+{
+  "Header": {
+    "about": "About",
+    "title": "Rick and Morty App",
+    "home": "Home",
+    "light": "light",
+    "dark": "dark"
+  },
+  "LanguageSwitcher": {
+    "en": "En",
+    "ru": "Ru"
+  },
+  "Main": {
+    "error": "Failed to load characters. Please try again"
+  },
+  "Refresh": {
+    "refresh": "Refresh"
+  },
+  "BuggyButton": {
+    "crash": "Crash App"
+  },
+  "Search": {
+    "search": "Search"
+  },
+  "Card": {
+    "name": "Name",
+    "gender": "Gender",
+    "species": "Species",
+    "status": "Status",
+    "location": "Location",
+    "unknownLocation": "Unknown location"
+  },
+  "Pagination": {
+    "prev": "Prev",
+    "next": "Next"
+  },
+  "Footer": {
+    "created": "This App is created for the RS School task"
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "back": "Back to main"
+  }
+}
